@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+	<meta charset="UTF-8">
+	<title>Account</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="../css/navbar.css" type="text/css">
+	<link rel="stylesheet" href="../css/infoUser.css" type="text/css">
+</head>
+<body>
+
+	<%@ include file="../navbar.jsp" %>
+	
+	<div id="container" class="container h-100 pt-4 mt-4 bg-dark">
+		<form id="form" name="formUser" action="" method="post" onsubmit="return checkForm()">
+			<label for="nome">Nome:</label><br/> 
+			<input id="nome" type="text" name="nome" value="" required> <br/>
+			<span class="error" id="errorName"></span><br/> 
+			
+			<label for="cognome">Cognome:</label><br/> 
+			<input type="text" id="cognome" name="cognome" value="" required> <br/>
+			<span class="error" id="errorSurname"></span><br/> 
+			
+			<label for="password">Password:</label><br/>
+			<input type="password" name="password" value="key" required> <br/>
+			<span class="error" id="errorPass"></span><br/> 
+			
+			<label for="indirizzo">Indirizzo:</label><br/>
+			<input type="text" id="indirizzo" name="indirizzo" value="" required> <br/>
+			<span class="error" id="errorAddress"></span><br/> 
+			
+			<label for="dataNascita">Data di Nascita:</label><br/>
+			<input type="text" id="dataNascita" name="dataNascita" value="" required> <br/><br/>
+			<span class="error" id="errorBirthDate"></span><br/> 
+			
+			<input type="submit"> <input type="reset"> <br/><br/>
+		</form>
+		
+		<p class="msg">  </p>
+		<p class="msg"> </p>
+	</div>
+	
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script src="../js/infoUser.js"></script>
+</body>
+</html>

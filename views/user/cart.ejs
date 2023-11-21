@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+	<meta charset="UTF-8">
+	<title>Carrello</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="../css/navbar.css" type="text/css">
+	<link rel="stylesheet" href="../css/cartUser.css" type="text/css">
+</head>
+<body>
+	<%- include("./include/navbar.ejs") %>
+	
+	<div id="container" class="container h-auto pt-4 mt-4 bg-dark">
+		<span id="titolo">Carrello</span> <br/>
+		
+	<div class="row">
+		
+		<% if (true){ %>
+		
+			<span class="void"> Il carrello è vuoto</span>
+			
+		<% } else {
+
+		%>
+		
+		<div class="col-7 pb-3">
+				<img src="" alt="Cofanetto" onerror="this.src='../img/bd/noimage.png'">
+	
+				<div class="descrizione">
+					<p> Nome:  <br/>
+						Contenuto:  <br/>
+						Prezzo: <br/>
+						Quantità:  <br/>
+					</p>
+			</div>
+		</div>
+		
+			}%>
+	</div>
+		<div class="float-right">
+			<div class="card card-totale bg-dark">
+	  			<div class="card-body">
+		    		<h5 class="card-title pb-0">Totale ():</h5>
+				    <p class="card-text"> &euro;</p>
+				    <a href="" class="btn btn-success">Compra</a>
+	  			</div>
+			</div>
+		</div>
+		
+	</div>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	
+</body>
+</html>
