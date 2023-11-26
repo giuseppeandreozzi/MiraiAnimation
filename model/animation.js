@@ -5,7 +5,7 @@ const animationSchema = new Schema({
         type: String,
         required: true
     },
-    Genere: {
+    genere: {
         type: String,
         required: true
     },

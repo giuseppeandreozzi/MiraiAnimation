@@ -19,20 +19,13 @@
 				<img src="" alt="logo animazione" onerror="this.src='img/anim/noimage.png' ">
 			</div>
 			<div class="col">
-				<p id="nome">Nome</p>
+				<p id="nome"><%= animation.titolo %></p>
 				
 				<p>
-				<% if (true) { %>
-					<b>Tipo:</b> Serie <br/>
-					<b>Episodi:</b><br/>
-					
-				<% } else if (false){ %>
-					<b>Tipo:</b> Film <br/>
-					<b>Uscita:</b> <%= film.getDataUscita() %> <br/>
-					
-				<% } %>
+					<b>Tipo:</b> <%= animation.tipo %><br/>
+					<b>Uscita:</b> <%= animation.dataUscita %> <br/>
 				
-				<b>Genere:</b> </p>
+				<b>Genere:</b> <%= animation.genere %> </p>
 			
 				<p><b>Staff</b><br/>
 					<span></span> <br/>

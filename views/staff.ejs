@@ -13,25 +13,28 @@
 	 
 	<div id="containerStaff" class="container pt-4 h-auto mt-4 bg-dark">
 		<div class="row">
-
-		<div class="col-6 text-center">
-			<a data-toggle="collapse" href="" role="button" aria-expanded="false" aria-controls="">
-			<img src="img/staff.png" class="w-50" alt="staff"><br/>
-			<span>Name</span> </a><br/>
-			<div class="collapse" id="">
-				<b>Anni di Servizio:</b>  <br/>
-				<b>Ruolo:</b> 
-				
-				<p>
-				<span>Animazioni</span> <br/>
-				
-					<a href=""></a>
-					<br/>
-				</p>
-			</div>
+			<% let id = 1;
+				for (staff of staffs) { %> 
+				<div class="col-6 text-center">
+					<a data-toggle="collapse" href="<%= "#" + id %>" role="button" aria-expanded="false" aria-controls="<%= id %>">
+					<img src="img/staff.png" class="w-50" alt="staff"><br/>
+					<span><%= staff.nome + " " + staff.cognome %></span> </a><br/>
+					<div class="collapse" id="<%= id %>">
+						<b>Anni di Servizio:</b> <%= staff.anniServizio %> <br/>
+						<b>Ruolo:</b> <%= staff.ruolo %>
+						
+						<p>
+						<span>Animazioni</span> <br/>
+						
+							<a href=""></a>
+							<br/>
+						</p>
+					</div>
+				</div>
+			<% 		id++;
+				} %>
 		</div>
 	</div>
-</div>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

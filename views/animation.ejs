@@ -12,14 +12,14 @@
 	<%- include("./include/navbar.ejs") %>
 	<div class="container pt-4 h-auto mt-4 bg-dark">
 		<div class="row">
-
+			<% for (anim of animations) { %>
 			<div class="col-5 mx-auto px-0 mt-5 text-center">
-				<a class="animation" href="">
+				<a class="animation" href="animationPage?anim= + <%= anim._id %>">
 					<img src="" alt="logo animazione" onerror="this.src='img/anim/noimage.png' "> <br/>
-					<span></span>
+					<span><%= anim.titolo %></span>
 				</a>
 			</div>
-		
+		<% } %>
 		</div>
 	</div>
 		
