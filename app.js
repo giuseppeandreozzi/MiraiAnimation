@@ -2,7 +2,7 @@ import express from "express";
 import 'dotenv/config';
 import * as path from "path";
 import * as mongoose from "mongoose";
-import publicRoutes from "./routes/public.js";
+import publicRoutes from "./routes/publicRoutes.js";
 
 const app = express();
 
