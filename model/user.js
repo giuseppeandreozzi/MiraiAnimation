@@ -1,6 +1,10 @@
 import {Schema, model} from "mongoose";
 
 const userSchema = new Schema({
+    email: {
+        type: String,
+        required: true
+    },
     username: {
         type: String,
         required: true
@@ -22,6 +26,14 @@ const userSchema = new Schema({
     tipo: {
         type: String,
         required: true
+    },
+    verificato:{
+        type: Boolean,
+        required: true
+    },
+    datiVerifica: {
+        codice: String,
+        scadenza: Date
     },
     carrello: [{
         quantity: {
@@ -51,12 +63,12 @@ const userSchema = new Schema({
         prezzo: {
             type: Number,
             required: true
-        }
-        }],
+        },
         prezzoTotale: {
             type: Number,
             required: true
         }
-    });
+    }]
+});
 
 export default model("User", userSchema);

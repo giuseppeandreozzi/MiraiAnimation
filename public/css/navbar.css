@@ -53,8 +53,8 @@ div#signUpModal label{
 	background-color: rgba(255, 255, 255, 0.9);
 }
 
-div#signUpModal input:focus ~ label,
-div#signUpModal input:valid ~ label {
+div#signUpModal input:focus + label,
+div#signUpModal input:valid + label {
   top: -55px;
   color: red;
   font-size: 85%;
