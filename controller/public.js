@@ -50,7 +50,7 @@ const getShop = (req, res, next) => {
 const getHome = (req, res, next) => {
     res.render("home.ejs", {
         errorType: "",
-        errorString: ""
+        errorString: "",
     });
 };
 
@@ -111,12 +111,13 @@ const postSignUp = (req, res, next) => {
                                 }
                             });
 
-                            user.save().then(result => {
+                            user.save().then(user => {
                                 transporter.sendMail({
                                     from: '"MiraiAnimation" joseph81106@gmail.com',
                                     to: user.email,
                                     subject: "Verify your account",
-                                    text: "Hello" + user.username + "\nPlease verify your account: " + "https://www." + req.hostname + ":" + process.env.PORT + "/signup/" + user.datiVerifica.codice
+                                    text: "Hello" + user.username + "\nPlease verify your account: " + "https://www." + req.hostname + ":" + process.env.PORT + "/signup/" + user.datiVerifica.codice,
+                                    html: '<h2>Hello' + user.username + '</h2>Please verify your account: <a href="' + req.protocol + '://' + req.hostname + ":" + process.env.PORT + "/signup/" + user.datiVerifica.codice + '">Verifica account</a>'
                                 });
     
                                 res.redirect("/");
@@ -141,8 +142,15 @@ const getVerify = (req, res, next) => {
         
         user.verificato = true;
         user.datiVerifica = null;
-        user.save();
-        res.redirect("/");
+        user.save().then(user => {
+            if(req.session.user)
+                req.session.user = user;
+            
+            res.redirect("/");
+        }).catch(err => {
+            console.log(err);
+        });
+
     }).catch(err => {
         console.log(err);
     });
@@ -174,13 +182,6 @@ const postLogIn = (req, res, next) => {
     });
 };
 
-const getLogOut = (req, res, next) => {
-    req.session.destroy(err => {
-        if(err)
-            console.log(err);
 
-        res.redirect("/");
-    });
-};
-export {getAnimation, getStaff, getShop, getAnimationPage, getHome, postSignUp, getVerify, postLogIn, getLogOut};
+export {getAnimation, getStaff, getShop, getAnimationPage, getHome, postSignUp, getVerify, postLogIn};
 

@@ -63,10 +63,6 @@ const userSchema = new Schema({
         prezzo: {
             type: Number,
             required: true
-        },
-        prezzoTotale: {
-            type: Number,
-            required: true
         }
     }]
 });

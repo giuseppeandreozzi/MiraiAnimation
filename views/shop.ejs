@@ -22,9 +22,11 @@
 					<span class="contenuto">Descrizione:</span> <br/>
 					<span><%= bd.descrizione %></span></p>
 					
-					<% if(false) { //user%>
-					<form name="shopForm" action="" method="get" onsubmit="return checkForm(this)">
+					<% if(locals.user) { //user%>
+					<form name="shopForm" action="addToCart" method="post" onsubmit="return checkForm(this)">
 						<input type="hidden" name="bd" value="<%= bd._id %>">
+						<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
+						<input type="hidden" name="prezzo" value="<%= bd.prezzo %>">
 						<label>Quantità
 						<input type="number" name="quantity" min="1">
 						</label><br/>

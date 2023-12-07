@@ -19,6 +19,4 @@ publicRoutes.get("/signup/:token", publicController.getVerify);
 
 publicRoutes.post("/login", publicController.postLogIn);
 
-publicRoutes.get("/logout", publicController.getLogOut);
-
 export default publicRoutes;

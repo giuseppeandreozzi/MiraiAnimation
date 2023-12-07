@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 	<meta charset="UTF-8">
-	<title>Carrello</title>
+	<title>Grazie per l'ordine</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<link rel="stylesheet" href="../css/navbar.css" type="text/css">
@@ -12,40 +12,11 @@
 	<%- include("../include/navbar.ejs") %>
 	
 	<div id="container" class="container h-auto pt-4 mt-4 bg-dark">
-		<span id="titolo">Carrello</span> <br/>
+		<span id="titolo">Ordine effettuato con successo</span> <br/>
 		
-	<div class="row">
-		
-		<% if (!locals.user.carrello){ %>
-			<span class="void"> Il carrello è vuoto</span>
-		<% } else { %>
-			<% var totale = 0;
-			for (el of cart){ 
-				totale += el.prezzo * el.quantity; %>
-				<div class="col-7 pb-3">
-					<img src="" alt="Cofanetto" onerror="this.src='../img/bd/noimage.png'">
-			
-					<div class="descrizione">
-						<p> Nome: <%= el.prodotto.animazione.titolo %><br/>
-							Descrizione: <%= el.prodotto.descrizione %> <br/> 
-							Prezzo: <%= el.prezzo  %> <br/> 
-							Quantità: <%= el.quantity %> <br/>
-						</p>
-					</div>
-				</div>
-			<%}%>
-		<%}%>
-	</div>
-		<div class="float-right">
-			<div class="card card-totale bg-dark">
-	  			<div class="card-body">
-		    		<h5 class="card-title pb-0">Totale:</h5>
-				    <p class="card-text"> <%= totale %> &euro;</p>
-				    <a href="/checkout" class="btn btn-success">Compra</a>
-	  			</div>
-			</div>
+	    <div class="row">
+            <p style="display: inline-block; text-align: center">Per qualsiasi informazione contattaci via mail.</p>
 		</div>
-		
 	</div>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

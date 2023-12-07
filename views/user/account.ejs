@@ -9,35 +9,37 @@
 	<link rel="stylesheet" href="../css/infoUser.css" type="text/css">
 </head>
 <body>
-
-	<%@ include file="../navbar.jsp" %>
+	<%- include("../include/navbar.ejs") %>
 	
 	<div id="container" class="container h-100 pt-4 mt-4 bg-dark">
-		<form id="form" name="formUser" action="" method="post" onsubmit="return checkForm()">
+		<form id="form" name="formUser" action="/account" method="post" onsubmit="return checkForm()">
+			<input type="hidden" name="_id" value="<%= locals.user._id %>">
+			<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
 			<label for="nome">Nome:</label><br/> 
-			<input id="nome" type="text" name="nome" value="" required> <br/>
+			<input id="nome" type="text" name="nome" value="<%= locals.user.nome%>" required> <br/>
 			<span class="error" id="errorName"></span><br/> 
 			
 			<label for="cognome">Cognome:</label><br/> 
-			<input type="text" id="cognome" name="cognome" value="" required> <br/>
+			<input type="text" id="cognome" name="cognome" value="<%= locals.user.cognome%>" required> <br/>
 			<span class="error" id="errorSurname"></span><br/> 
-			
-			<label for="password">Password:</label><br/>
-			<input type="password" name="password" value="key" required> <br/>
-			<span class="error" id="errorPass"></span><br/> 
-			
-			<label for="indirizzo">Indirizzo:</label><br/>
-			<input type="text" id="indirizzo" name="indirizzo" value="" required> <br/>
+
+			<h5>Indirizzo:</h5>
+			<label for="via">Via:</label><br/>
+			<input type="text" id="indirizzo" name="via" value="<%= locals.user.indirizzo.via%>" required> <br/>
+			<label for="via">Città:</label><br/>
+			<input type="text" id="indirizzo" name="city" value="<%= locals.user.indirizzo.città%>" required> <br/>
+			<label for="via">CAP:</label><br/>
+			<input type="text" id="indirizzo" name="cap" value="<%= locals.user.indirizzo.CAP%>" required> <br/>
 			<span class="error" id="errorAddress"></span><br/> 
 			
 			<label for="dataNascita">Data di Nascita:</label><br/>
-			<input type="text" id="dataNascita" name="dataNascita" value="" required> <br/><br/>
+			<input type="text" id="dataNascita" name="dataNascita" value="<%= locals.user.dataNascita%>" required> <br/><br/>
 			<span class="error" id="errorBirthDate"></span><br/> 
 			
 			<input type="submit"> <input type="reset"> <br/><br/>
 		</form>
 		
-		<p class="msg">  </p>
+		<p class="msg"><%= success %></p>
 		<p class="msg"> </p>
 	</div>
 	

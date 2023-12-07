@@ -40,6 +40,10 @@ div#signUpModal{
 	color: black !important;
 }
 
+div#resetModal{
+	color: black;
+}
+
 div#signUpModal label{
 	color: black;
   	position: relative;
