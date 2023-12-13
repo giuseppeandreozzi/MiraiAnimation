@@ -4,6 +4,9 @@ import nodemailer from "nodemailer";
 import * as crypto from "crypto";
 import Stripe from "stripe";
 import bd from "../model/bd.js";
+import * as Mongoose from "mongoose";
+import * as path from "path";
+import PDF from "pdfkit";
 
 const getLogOut = (req, res, next) => {
     req.session.destroy(err => {
@@ -140,6 +143,8 @@ const getCarrello = (req, res, next) => {
         res.render("user/cart", {
             cart: result.carrello
         });
+    }).catch(err =>{
+        console.log(err);
     });
 };
 
@@ -202,13 +207,22 @@ const getCheckout = (req, res, next) => {
 
 const getCheckoutSuccess = (req, res, next) => {
     User.findById(req.session.user._id).then(user =>{
+        let arr = [];
+
         for(el of user.carrello){
-            user.ordini.push({
+            arr.push({
                 quantity: el.quantity,
                 prodotto: el.prodotto,
                 prezzo: el.prezzo
             });
         }
+
+        user.ordini.push({
+            prodotti: arr,
+            dataOrdine: new Date(),
+            numeroOrdine: Date.now().toString().slice(-5) + "#" + Math.floor(Math.random() * 100)
+        });
+
         user.carrello = [];
 
         user.save().then(user => {
@@ -223,4 +237,85 @@ const getCheckoutSuccess = (req, res, next) => {
 
 };
 
-export {getLogOut, getReset, getResetPassword, postResetPassword, getAccount, postAccount, getCarrello, postCarrello, getCheckout, getCheckoutSuccess};
+const postDeleteCart = (req, res, next) => {
+    User.findById(req.session.user._id).then(user => {
+        user.carrello = user.carrello.filter(el => el._id.toString() !== req.body._id);
+
+        user.save().then(user => {
+            req.session.user = user;
+    
+            res.redirect("/carrello");
+        });
+    }).catch(err =>{
+        console.log(err);
+    });
+};
+
+const getOrdini = (req, res, next) => {
+    let user = new User(req.session.user);
+
+    user.populate({
+        path: "ordini.prodotti.prodotto", 
+        populate: {path: "animazione"}
+    }).then(user => {
+        res.render("user/orders", {
+            ordini: user.ordini
+        });
+    }).catch(err =>{
+        console.log(err);
+    });
+
+};
+
+const getFattura = (req, res, next) => {
+    const doc = new PDF({font: "Helvetica"});
+    const numeroOrdine = decodeURIComponent(req.params.numOrdine);
+    var ordine = {}, list = [];
+    doc.pipe(res);
+
+    let user = new User(req.session.user);
+
+    user.populate({
+        path: "ordini.prodotti.prodotto", 
+        populate: {path: "animazione"}
+    }).then(user => {
+        for (el of user.ordini){
+            if(el.numeroOrdine === numeroOrdine){
+                ordine = el;
+                break;
+            }
+        }
+        
+        doc.image(path.join("public", "img", "logo.png"), {fit: [200, 100], align: 'center'})
+        .moveDown()
+        .fontSize(16)
+        .text("Fatture ordine N°" + numeroOrdine, {align: "center"})
+        .moveDown()
+        .fontSize(14)
+        .font("Helvetica-Bold")
+        .text("Prodotti")
+        .moveDown();
+
+        for(el of ordine.prodotti){
+            doc.fontSize(13)
+                .font("Helvetica-Bold")
+                .text(el.prodotto.animazione.titolo)
+                .font("Helvetica")
+                .fontSize(12)
+                .list(["Quantità: " + el.quantity, "Prezzo: " + el.prezzo])
+                .moveDown();
+        }
+
+        doc.end();
+    }).catch(err =>{
+        console.log(err);
+    });
+
+
+
+    
+
+};
+
+export {getLogOut, getReset, getResetPassword, postResetPassword, getAccount, postAccount, getCarrello, postCarrello, getCheckout, getCheckoutSuccess, 
+    postDeleteCart, getOrdini, getFattura};

@@ -51,19 +51,30 @@ const userSchema = new Schema({
         }
     }],
     ordini: [{
-        quantity: {
-            type: Number,
+        prodotti: [{
+            quantity: {
+                type: Number,
+                required: true
+            },
+            prodotto: {
+                type: Schema.Types.ObjectId,
+                ref: "Blu-ray",
+                required: true
+            },
+            prezzo: {
+                type: Number,
+                required: true
+            }
+        }],
+        dataOrdine: {
+            type: Date,
             required: true
         },
-        prodotto: {
-            type: Schema.Types.ObjectId,
-            ref: "Blu-ray",
+        numeroOrdine: {
+            type: String,
             required: true
         },
-        prezzo: {
-            type: Number,
-            required: true
-        }
+
     }]
 });
 

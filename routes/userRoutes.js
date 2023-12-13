@@ -23,4 +23,10 @@ userRoutes.get("/checkout", userController.getCheckout);
 
 userRoutes.get("/checkoutSuccess", userController.getCheckoutSuccess);
 
+userRoutes.post("/deleteCart", userController.postDeleteCart);
+
+userRoutes.get("/ordini", userController.getOrdini);
+
+userRoutes.get("/fattura/:numOrdine", userController.getFattura);
+
 export default userRoutes;

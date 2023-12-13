@@ -22,3 +22,15 @@ div.col-3 img{
 	width: 100%;
 	height: auto;
 }
+.card {
+	background-color: #EEEEEE;
+}
+
+.card-body {
+	color: #343a40;
+}
+
+h5.mb-0 span {
+	color: #343a40;
+	font-size: 1rem;
+}
