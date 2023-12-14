@@ -268,8 +268,17 @@ const getOrdini = (req, res, next) => {
 };
 
 const getFattura = (req, res, next) => {
-    const doc = new PDF({font: "Helvetica"});
     const numeroOrdine = decodeURIComponent(req.params.numOrdine);
+    const doc = new PDF({
+        font: "Helvetica",
+        pdfVersion: "1.5", 
+        tagged: true,
+        info: {
+            Title: "Fattura " + numeroOrdine
+        },
+        displayTitle: true
+    });
+
     var ordine = {}, list = [];
     doc.pipe(res);
 
@@ -279,24 +288,40 @@ const getFattura = (req, res, next) => {
         path: "ordini.prodotti.prodotto", 
         populate: {path: "animazione"}
     }).then(user => {
-        for (el of user.ordini){
+        let prezzoTotale = 0;
+
+        for (let el of user.ordini){
             if(el.numeroOrdine === numeroOrdine){
                 ordine = el;
                 break;
             }
         }
         
-        doc.image(path.join("public", "img", "logo.png"), {fit: [200, 100], align: 'center'})
-        .moveDown()
-        .fontSize(16)
-        .text("Fatture ordine N°" + numeroOrdine, {align: "center"})
-        .moveDown()
-        .fontSize(14)
-        .font("Helvetica-Bold")
-        .text("Prodotti")
-        .moveDown();
+        doc.font("Helvetica-Bold")
+            .text("Mittente", 30, 30)
+            .font("Helvetica")
+            .text("Mirai Animation", 30, 46);
 
-        for(el of ordine.prodotti){
+        doc.font("Helvetica-Bold")
+            .text("Destinatario", 420, 30)
+            .font("Helvetica")
+            .text(user.nome + " " + user.cognome, 420, 45)
+            .text(user.indirizzo.città, 420, 57)
+            .text(user.indirizzo.via + " " + user.indirizzo.CAP, 420, 69);  
+        
+        doc.rect(220, 15, 160, 100).fill()
+            .image(path.join("public", "img", "logo.png"), 200, 15, {fit: [200, 100], align: 'center'})
+            .moveDown(2)
+            .fontSize(16)
+            .text("Fattura ordine N°" + numeroOrdine, 200, 150)
+            .moveDown()
+            .fontSize(15)
+            .font("Helvetica-Bold")
+            .text("PRODOTTI", 50, 200)
+            .moveDown();
+  
+        
+        for(let el of ordine.prodotti){
             doc.fontSize(13)
                 .font("Helvetica-Bold")
                 .text(el.prodotto.animazione.titolo)
@@ -304,8 +329,14 @@ const getFattura = (req, res, next) => {
                 .fontSize(12)
                 .list(["Quantità: " + el.quantity, "Prezzo: " + el.prezzo])
                 .moveDown();
+
+            prezzoTotale += el.prezzo;
         }
 
+        doc.fontSize(13)
+            .font("Helvetica-Bold")
+            .text("Prezzo totale: " + prezzoTotale, {align: 'right'});
+        
         doc.end();
     }).catch(err =>{
         console.log(err);
