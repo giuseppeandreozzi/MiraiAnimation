@@ -6,6 +6,7 @@ import publicRoutes from "./routes/publicRoutes.js";
 import session from "express-session";
 import csurf from "csurf";
 import userRoutes from "./routes/userRoutes.js"
+import adminRoutes from "./routes/adminRoutes.js";
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 
 app.use(publicRoutes);
 app.use(userRoutes);
+app.use(adminRoutes);
 
 mongoose.connect(process.env.DB_LINK).then(() => {
     app.listen(3030);

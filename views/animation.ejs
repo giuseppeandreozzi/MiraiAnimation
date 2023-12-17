@@ -15,7 +15,7 @@
 			<% for (anim of animations) { %>
 			<div class="col-5 mx-auto px-0 mt-5 text-center">
 				<a class="animation" href="animation/<%= anim._id %>">
-					<img src="" alt="logo animazione" onerror="this.src='img/anim/noimage.png' "> <br/>
+					<img src="data:image/String;base64,<%= (anim.immagine) ? anim.immagine.toString('base64') : "" %>" alt="logo animazione" onerror="this.src='img/anim/noimage.png' "> <br/>
 					<span><%= anim.titolo %></span>
 				</a>
 			</div>

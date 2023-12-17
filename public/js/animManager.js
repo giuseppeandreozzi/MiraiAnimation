@@ -5,23 +5,24 @@ function loadAnim(){
 	}
 	var jsonObj = {};
 	jsonObj.codiceAnimazione = $("option:checked").val();
-	var jsonStr = JSON.stringify(jsonObj);
-			
+
 	$.ajax({
-		url:"AnimAdminControl",
+		url:"/infoAnimazione",
 		type: "POST",
-		data: "json=" + encodeURIComponent(jsonStr),
+		data: jsonObj,
+		headers: {
+			"X-CSRF-TOKEN": $("input[name=_csrf]").attr('value')
+		},
 		dataType: "json",
 		success: function(result){
-					$("#anim input[name=nome]").val(result.nome);
+					$("#anim input[name=_id]").val(result._id);
+					$("#anim input[name=_csrf]").val(result.csrf);
+					$("#anim input[name=titolo]").val(result.titolo);
 				    $("#anim input[name=genere]").val(result.genere);
+					$("#anim input[name=dataUscita]").val(result.dataUscita);
 				    if (result.tipo == "serie"){
-				    	$("#anim input[name=episodi]").val(result.episodi);
 				    	$("#anim input[value=serie]").click();
-				    	$("#anim input[name=dataUscita]").val("");
 				    } else{
-				    	$("#anim input[name=dataUscita]").val(result.dataUscita);
-				    	$("#anim input[value=film]").click();
 				    	$("#anim input[name=episodi]").val("");
 				    }
 				    $("#anim").show();

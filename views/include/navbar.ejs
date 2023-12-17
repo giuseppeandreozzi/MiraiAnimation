@@ -30,7 +30,7 @@
 		          Accedi
 		        </a>
 		        <div class="dropdown-menu py-2 px-3 dropdown-menu-right" id="dropdownLog" aria-labelledby="logDropdown">
-		          	<form name="logForm" class="px-auto ml-auto text-center" action="login" method="post" onsubmit="return checkLogForm()">
+		          	<form name="logForm" class="px-auto ml-auto text-center" action="/login" method="post" onsubmit="return checkLogForm()">
 						<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
 		          		<div class="form-group">
 							<label for="userLog">Username</label>
@@ -72,11 +72,11 @@
 			          Sezione Admin
 			        </a>
 			        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="adminDropdown">
-			          <a class="dropdown-item" href="">Pannello Animazioni</a>
-			          <a class="dropdown-item" href="">Pannello Personale</a>
+			          <a class="dropdown-item" href="/pannelloAnimazioni">Pannello Animazioni</a>
+			          <a class="dropdown-item" href="/pannelloStaff">Pannello Personale</a>
 			          <!--  <div class="dropdown-divider"></div>-->
-			          <a class="dropdown-item" href="">Pannello Cofanetti</a>
-			          <a class="dropdown-item" href="">Pannello Utenti</a>
+			          <a class="dropdown-item" href="/pannelloBD">Pannello Blu-ray</a>
+			          <a class="dropdown-item" href="/pannelloUtenti">Pannello Utenti</a>
 			        </div>
 		      	</li>
 		      <% } %>
@@ -95,7 +95,7 @@
 					<span aria-hidden="true">&times;</span>
 					</button>
 	      		</div>
-	      		<form name="signForm" action="signup" method="post" onsubmit="return checkSignForm()">
+	      		<form name="signForm" action="/signup" method="post" onsubmit="return checkSignForm()">
 					<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
 					<div class="modal-body mt-3">
 						<div class="form-group">

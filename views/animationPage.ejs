@@ -16,7 +16,7 @@
 	<div id="container" class="container h-auto pt-4 mt-4 bg-dark">
 		<div class="row pb-5">
 			<div class="col">
-				<img src="" alt="logo animazione" onerror="this.src='/img/anim/noimage.png' ">
+				<img src="data:image/String;base64,<%= (animation.immagine) ? animation.immagine.toString('base64') : "" %>" alt="logo animazione" onerror="this.src='/img/anim/noimage.png' ">
 			</div>
 			<div class="col">
 				<p id="nome"><%= animation.titolo %></p>

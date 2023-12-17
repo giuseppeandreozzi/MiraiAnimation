@@ -25,37 +25,34 @@
 		
 		    <div id="edit" class="collapse show" aria-labelledby="headingEdit" data-parent="#accordionAnim">
 		      <div class="card-body bg-dark">
-				<form id="animation" action="" method="post" onsubmit="return checkInsertEditForm(this)">
+				<form id="animation" action="modificaAnimazione?_csrf=<%= locals.csrf %>" method="post" enctype="multipart/form-data" onsubmit="return checkInsertEditForm(this)">
 				<span>Animazione:</span>
 				<select name="codiceAnimazione" onchange="loadAnim()">
 					<option value="" disabled selected>Seleziona un'opzione</option>
-					<%  %>
-						<option value="" ></option>
-					<%  %>
+					<% for(let anim of animations) {%>
+						<option value="<%= anim._id %>" ><%= anim.titolo %></option>
+					<% } %>
 				</select>
 				
 				<div id="anim" class="pt-2">
-					<input type="hidden" name="action" value="edit">
-					<label>Nome: <input type="text" name="nome" required></label> <br/>
+					<input type="hidden" name="_id" value="">
+					<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
+					<label>Titolo: <input type="text" name="titolo" required></label> <br/>
 					<span class="error errorNome"></span>
 					
-					<label> Genere: <input type="text" name="genere" required> </label> <br/>
+					<label>Genere: <input type="text" name="genere" required> </label> <br/>
 					<span class="error errorGenere"></span>
 					 
 					<span>Tipo:</span>
 					<input type="radio" name="tipo" value="serie" onchange="updateInfo(this)" required> Serie
 					<input type="radio" name="tipo" value="film" onchange="updateInfo(this)" required> Film
 					<br/>
-		
-					<div class="serie py-2">
-						Episodi: <input type="number" class="episodi" name="episodi"> <br/>
-						<span class="error errorEpisodi"></span>
-					</div>
-						
-					<div class="film py-3">
-						<label>Uscita: <input type="text" name="dataUscita"></label>
-						<span class="error errorUscita"></span>
-					</div>
+
+					<label>Data d'uscita: <input type="text" name="dataUscita"></label>
+					<span class="error errorUscita"></span>
+
+					<label>Immagine: <input type="file" name="immagine"></label>
+
 					<input type="submit"> <br/>
 				</div>
 				<p> </p>
@@ -96,7 +93,7 @@
 					</div> <br/>
 						
 					<input type="submit"> <br/>
-					<p> <%= errorInsert %></p>
+					<p> error </p>
 				</form>
 		      </div>
 		    </div>
