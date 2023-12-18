@@ -4,6 +4,7 @@ function loadAnim(){
 		return;
 	}
 	var jsonObj = {};
+	jsonObj._csrf = $("input[name=_csrf]").attr('value');
 	jsonObj.codiceAnimazione = $("option:checked").val();
 
 	$.ajax({
@@ -16,7 +17,6 @@ function loadAnim(){
 		dataType: "json",
 		success: function(result){
 					$("#anim input[name=_id]").val(result._id);
-					$("#anim input[name=_csrf]").val(result.csrf);
 					$("#anim input[name=titolo]").val(result.titolo);
 				    $("#anim input[name=genere]").val(result.genere);
 					$("#anim input[name=dataUscita]").val(result.dataUscita);

@@ -25,7 +25,7 @@
 		
 		    <div id="edit" class="collapse show" aria-labelledby="headingEdit" data-parent="#accordionAnim">
 		      <div class="card-body bg-dark">
-				<form id="animation" action="modificaAnimazione?_csrf=<%= locals.csrf %>" method="post" enctype="multipart/form-data" onsubmit="return checkInsertEditForm(this)">
+				<form id="animation" action="modificaAnimazione?_c=<%= locals.csrf %>" method="post" enctype="multipart/form-data" onsubmit="return checkInsertEditForm(this)">
 				<span>Animazione:</span>
 				<select name="codiceAnimazione" onchange="loadAnim()">
 					<option value="" disabled selected>Seleziona un'opzione</option>

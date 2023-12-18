@@ -31,7 +31,6 @@ const getPannelloUtenti = (req, res, next) => {
 
 const postInfoAnimazione = (req, res, next) => {
     Animation.findById(req.body.codiceAnimazione).then(anim => {
-        anim.csrf = req.csrfToken();
         res.json(anim);
     }).catch(err => {
         console.log(err);

@@ -4,11 +4,20 @@ import * as path from "path";
 import * as mongoose from "mongoose";
 import publicRoutes from "./routes/publicRoutes.js";
 import session from "express-session";
-import csurf from "csurf";
+import { csrfSync } from "csrf-sync";
 import userRoutes from "./routes/userRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js";
 
 const app = express();
+const csrf = csrfSync({
+    getTokenFromRequest: (req) => {
+        if (req.is("multipart")) {
+          return req.query._c;
+        }
+
+        return req.body["_csrf"];
+      }
+});
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'))
@@ -22,7 +31,7 @@ app.use(session({
     saveUninitialized: false
 }));
 
-app.use(csurf({ cookie: false }));
+app.use(csrf.csrfSynchronisedProtection);
 
 app.use((req, res, next) => {
     res.locals.user = req.session.user;
