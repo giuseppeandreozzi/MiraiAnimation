@@ -7,7 +7,7 @@ html, body{
 	color: #EEEEEE;
 }
 
-#anim, .serie, .film {
+#anim, .serie, .film, .staffSelect {
 	display: none;
 }
 

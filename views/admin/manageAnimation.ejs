@@ -25,7 +25,7 @@
 		
 		    <div id="edit" class="collapse show" aria-labelledby="headingEdit" data-parent="#accordionAnim">
 		      <div class="card-body bg-dark">
-				<form id="animation" action="modificaAnimazione?_c=<%= locals.csrf %>" method="post" enctype="multipart/form-data" onsubmit="return checkInsertEditForm(this)">
+				<form id="animation" action="/modificaAnimazione?_c=<%= locals.csrf %>" method="post" enctype="multipart/form-data" onsubmit="return checkInsertEditForm(this)">
 				<span>Animazione:</span>
 				<select name="codiceAnimazione" onchange="loadAnim()">
 					<option value="" disabled selected>Seleziona un'opzione</option>
@@ -36,7 +36,6 @@
 				
 				<div id="anim" class="pt-2">
 					<input type="hidden" name="_id" value="">
-					<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
 					<label>Titolo: <input type="text" name="titolo" required></label> <br/>
 					<span class="error errorNome"></span>
 					
@@ -44,14 +43,16 @@
 					<span class="error errorGenere"></span>
 					 
 					<span>Tipo:</span>
-					<input type="radio" name="tipo" value="serie" onchange="updateInfo(this)" required> Serie
-					<input type="radio" name="tipo" value="film" onchange="updateInfo(this)" required> Film
+					<input type="radio" name="tipo" value="serie" required> Serie
+					<input type="radio" name="tipo" value="film" required> Film
 					<br/>
 
 					<label>Data d'uscita: <input type="text" name="dataUscita"></label>
 					<span class="error errorUscita"></span>
+					<br/>
 
 					<label>Immagine: <input type="file" name="immagine"></label>
+					<br/>
 
 					<input type="submit"> <br/>
 				</div>
@@ -71,29 +72,27 @@
 		    </div>
 		    <div id="insert" class="collapse" aria-labelledby="headingInsert" data-parent="#accordionAnim">
 		      <div class="card-body bg-dark">
-				<form id="addAnim" action="" method="post" onsubmit="return checkInsertEditForm(this)">
-					<input type="hidden" name="action" value="insert">
-					<label>Nome: <input type="text" name="nome" required></label> <br/>
+				<form id="addAnim" action="/aggiungiAnimazione?_c=<%= locals.csrf %>" method="post" enctype="multipart/form-data" onsubmit="return checkInsertEditForm(this)">
+					<label>Titolo: <input type="text" name="titolo" required></label> <br/>
 					<span class="error errorNome"></span>
 					
-					<label>Genere: <input type="text" name="genere" required></label> <br/>
+					<label>Genere: <input type="text" name="genere" required> </label> <br/>
 					<span class="error errorGenere"></span>
+					 
 					<span>Tipo:</span>
-					<input type="radio" name="tipo" value="serie" onchange="updateInfo(this)" required> Serie
-					<input type="radio" name="tipo" value="film" onchange="updateInfo(this)" required> Film
-					
-					<div class="serie py-2">
-						Episodi: <input type="number" class="episodi" name="episodi"> <br/>
-						<span class="error errorEpisodi"></span>
-					</div>
-						
-					<div class="film py-2">
-						Uscita: <input type="text" name="dataUscita">
-						<span class="error errorUscita"></span>
-					</div> <br/>
-						
+					<input type="radio" name="tipo" value="serie" required> Serie
+					<input type="radio" name="tipo" value="film" required> Film
+					<br/>
+
+					<label>Data d'uscita: <input type="text" name="dataUscita"></label>
+					<span class="error errorUscita"></span>
+					<br/>
+
+					<label>Immagine: <input type="file" name="immagine"></label>
+					<br/>
+
 					<input type="submit"> <br/>
-					<p> error </p>
+					<p></p>
 				</form>
 		      </div>
 		    </div>
@@ -108,13 +107,14 @@
 		    </div>
 		    <div id="delete" class="collapse" aria-labelledby="headingDelete" data-parent="#accordionAnim">
 		      <div class="card-body bg-dark">
-		        <form name="del" action="" method="post">
-					<input type="hidden" name="action" value="delete">
+		        <form name="del" action="cancellaAnimazione" method="post">
+					<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
 					<span>Animazione: </span>
-					<select name="anim">
-						<%  %>
-							<option value="" ></option>
-						<%  %>
+					<select name="_id">
+						<option value="" disabled selected>Seleziona un'opzione</option>
+						<% for(let anim of animations) {%>
+							<option value="<%= anim._id %>" ><%= anim.titolo %></option>
+						<% } %>
 					</select>
 					<span class="error" id="errorDel"></span>
 					<input class="ml-2" type="submit">
@@ -133,16 +133,23 @@
 		    </div>
 		    <div id="insertStaff" class="collapse" aria-labelledby="headingInsertStaff" data-parent="#accordionAnim">
 		      <div class="card-body bg-dark">
-		        <form id="addStaff" action="" method="post" onsubmit="return checkAddDelStaff(this)">
-					<input type="hidden" name="action" value="insertStaff">
+		        <form id="addStaff" action="/aggiungiStaffAnimazione" method="post" onsubmit="return checkAddDelStaff(this)">
+					<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
 					<span>Animazione: </span>
-					<select name="anim">
-						<%  %>
-							<option value="" > </option>
-						<%  %>
+					<select name="_idAnimazione">
+						<option value="" disabled selected>Seleziona un'opzione</option>
+						<% for(let anim of animations) {%>
+							<option value="<%= anim._id %>" ><%= anim.titolo %></option>
+						<% } %>
 					</select>
 					<br/>
-					<label class="mt-2"> Codice Fiscale Staff: <input type="text" name="codiceFiscale" required></label>
+					<span class="staffSelect">Staff: </span>
+					<select name="_idStaff">
+						<option value="" disabled selected>Seleziona un dipendente</option>
+						<% for(let staff of staffs) {%>
+							<option value="<%= staff._id %>" ><%= staff.nome + " " + staff.cognome + " | " + staff.ruolo%></option>
+						<% } %>
+					</select>
 					<span class="error errorCF"></span>
 					<br/>
 					<input type="submit"> <br/>
@@ -162,47 +169,25 @@
 		    </div>
 		    <div id="deleteStaff" class="collapse" aria-labelledby="headingDeleteStaff" data-parent="#accordionAnim">
 		      <div class="card-body bg-dark">
-		        <form id="delStaff" action="" method="post" onsubmit="return checkAddDelStaff(this)">
-					<input type="hidden" name="action" value="deleteStaff">
+		        <form id="delStaff" action="/eliminaStaffAnimazione" method="post" onsubmit="return checkAddDelStaff(this)">
+					<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
 					<span>Animazione: </span>
-					<select name="anim">
-						<%  %>
-							<option value="" ></option>
-						<% %>
+					<select id="idAnimDelStaff" name="_idAnimazione" onchange='setStaff("<%= encodeURIComponent(JSON.stringify(animations)) %>")'>
+						<option value="" disabled selected>Seleziona un'opzione</option>
+						<% for(let anim of animations) {%>
+							<option value="<%= anim._id %>" ><%= anim.titolo %></option>
+						<% } %>
 					</select>
 					<br/>
-					<label class="mt-2"> Codice Fiscale Staff: <input type="text" name="codiceFiscale" required> </label>
+					<span class="staffSelect">Staff: </span>
+					<select id="idStaff" name="_idStaff">
+						<option value='' disabled selected>Seleziona un'opzione</option>
+					</select>
+				
 					<span class="error errorCF"></span>
 					<br/>
 					<input type="submit"> <br/>
 					<p> </p>
-				</form>
-		      </div>
-		    </div>
-		  </div>
-		  
-		  	<div class="card bg-dark">
-		    <div class="card-header bg-light" id="headingImage">
-		      <h2 class="mb-0">
-		        <button class="btn btn-light btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#loadImage" aria-expanded="false" aria-controls="loadImage">
-		          Aggiungi o Modifica immagine di un'animazione
-		        </button>
-		      </h2>
-		    </div>
-		    <div id="loadImage" class="collapse" aria-labelledby="headingImage" data-parent="#accordionAnim">
-		      <div class="card-body bg-dark">
-		        <form action="" method="post" enctype="multipart/form-data">
-					<span>Animazione: </span>
-					<select name="anim">
-						<%  %>
-							<option value="" > </option>
-						<%  %>
-					</select>
-					<br/>
-					<input type="file" name="image" accept="image/png" required>
-					<br/>
-					<input type="submit"> <br/>
-					<p></p>
 				</form>
 		      </div>
 		    </div>
@@ -217,7 +202,7 @@
 	<% if (false) { %>
 		<script>
 			$(document).ready(function(){
-					alert("Si è verificato un errore nell'eseguire l'operazione");
+					alert(msg);
 			});		
 		</script>	
 	<% } %>

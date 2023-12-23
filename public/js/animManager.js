@@ -20,11 +20,11 @@ function loadAnim(){
 					$("#anim input[name=titolo]").val(result.titolo);
 				    $("#anim input[name=genere]").val(result.genere);
 					$("#anim input[name=dataUscita]").val(result.dataUscita);
-				    if (result.tipo == "serie"){
+				    if (result.tipo == "serie")
 				    	$("#anim input[value=serie]").click();
-				    } else{
-				    	$("#anim input[name=episodi]").val("");
-				    }
+				    else
+				    	$("#anim input[value=film]").click();
+				    
 				    $("#anim").show();
 				     
 				}
@@ -36,12 +36,18 @@ function updateInfo(element){ //element contiene riferimento al radio button che
 	var parentID = $(element).parent().attr("id");
 
 	if ($("#" + parentID + " input[name=tipo]:checked").val() == "serie"){
-		$("#" + parentID + " div.film").hide();
 		$("#" + parentID + " div.serie").show();
 	} else {
 		$("#" + parentID + " div.serie").hide();
-		$("#" + parentID + " div.film").show();
 	}
+}
+
+function updateInfoDeleteStaff(element){ //element contiene riferimento al radio button che viene selezionato
+	var parentID = $(element).parent().attr("id");
+
+	$("#" + parentID + " select").hide();
+
+	$("#" + parentID + " select#" + $(element).attr("id")).show();
 }
 
 function checkInsertEditForm(form){
@@ -118,4 +124,32 @@ function checkAddDelStaff(form){
 	}
 	
 	
+}
+
+function setStaff(animations){
+	var animArray = JSON.parse(decodeURIComponent(animations));
+	var select = document.getElementById('idStaff');
+	var animation = document.querySelector("#idAnimDelStaff").value;
+
+	var staffArray = animArray[animArray.findIndex((el) => el._id == animation)].staffs;
+	console.log(staffArray, animation)
+	var html = "" + "<option value='' disabled selected>Seleziona un'opzione</option>";
+	
+	$("#idStaff").empty();
+	var option = document.createElement('OPTION');
+	option.text = "Seleziona un'opzione";
+	option.disabled = true;
+	select.add(option);
+
+	staffArray.forEach(staff => {
+		var opt = document.createElement('OPTION');
+		opt.text = staff.nome + " " + staff.cognome + " | " + staff.ruolo;
+		opt.value = staff._id;
+		document.getElementById('idStaff').add(opt);
+		//html += "<option value='" + staff._id + "'" +  ">" + staff.nome + " " + staff.cognome + " | " + staff.ruolo + "</option>";
+	});
+
+	document.querySelector(".staffSelect").style.display = "block";
+	document.getElementById('idStaff').style.display = "block";
+	//document.getElementById("idStaff").innerHTML = "ciao";
 }

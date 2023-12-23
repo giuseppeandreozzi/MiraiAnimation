@@ -25,18 +25,20 @@
             
                 <div id="edit" class="collapse show" aria-labelledby="headingEdit" data-parent="#accordionStaff">
                     <div class="card-body bg-dark">
-                        <form name="editStaff" id="editStaff" action="" method="post" onsubmit="return checkEditForm()">
-                            <input type="hidden" name="action" value="edit">
+                        <form name="editStaff" id="editStaff" action="/modificaStaff" method="post" onsubmit="return checkEditForm()">
+                            <input type="hidden" name="_csrf" value="<%= locals.csrf %>">
                             
                             <span>Personale: </span>
-                            <select name="codiceFiscale" onchange="loadStaff()">
+                            <select name="codiceStaff" onchange="loadStaff()">
                                 <option value="" disabled selected>Seleziona un'opzione</option>
-                                <%  %>
-                                    <option value="<%= staff.getCodiceFiscale() %>" > <%= staff.getNome() + " " + staff.getCognome() %> </option>
-                                <%  %>
+                                <% for (let staff of staffs) { %>
+                                    <option value="<%= staff._id %>"> <%= staff.nome + " " + staff.cognome + " | " + staff.ruolo %></option>
+                                <% } %>
                             </select> <br/>
                         
                             <div class="py-2" id="staff">
+                                <label>Nome: <input type="text" name="nome" required></label> <br/>
+                                <label>Cognome: <input type="text" name="cognome" required></label> <br/>
                                 <label>Anni servizio: <input type="number" class="anni" name="anniServizio" min="0" required></label> <br/>
                                 <span class="error" id="errorAnniEdit"></span>
                                 
@@ -64,11 +66,8 @@
                 </div>
                 <div id="insert" class="collapse" aria-labelledby="headingInsert" data-parent="#accordionStaff">
                     <div class="card-body bg-dark">
-                        <form name="insertStaff" id="insertStaff" action="" method="post" onsubmit="return checkInsertForm()">
-                            <input type="hidden" name="action" value="insert">
-                            
-                            <label >Codice Fiscale: <input type="text" name="codiceFiscale" required></label> <br/>
-                            <span class="error" id="errorCF"></span>
+                        <form name="insertStaff" id="insertStaff" action="/inserimentoStaff" method="post" onsubmit="return checkInsertForm()">
+                            <input type="hidden" name="_csrf" value="<%= locals.csrf %>">
                             
                             <label >Nome: <input type="text" name="nome" required></label> <br/>
                             <span class="error" id="errorNome"></span>
@@ -101,13 +100,13 @@
                 </div>
                 <div id="delete" class="collapse" aria-labelledby="headingDelete" data-parent="#accordionStaff">
                     <div class="card-body bg-dark">
-                            <form id="deleteStaff" action="" method="post">
-                                <input type="hidden" name="action" value="delete">
+                            <form id="deleteStaff" action="/eliminaStaff" method="post">
+                                <input type="hidden" name="_csrf" value="<%= locals.csrf %>">
                                 <span>Personale: </span>
-                                <select name="codiceFiscale">
-                                <%  %>
-                                    <option value="" > </option>
-                                <%  %>
+                                <select name="codiceStaff">
+                                <% for (let staff of staffs) { %>
+                                    <option value="<%= staff._id %>"> <%= staff.nome + " " + staff.cognome + " | " + staff.ruolo %></option>
+                                <% } %>
                                 </select>
                                 
                                 <input class="ml-2" type="submit">

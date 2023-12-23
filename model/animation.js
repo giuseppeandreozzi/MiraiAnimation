@@ -18,7 +18,6 @@ const animationSchema = new Schema({
         type: String,
         required: true
     },
-    numEpisodi: Number,
     recensioni: [{
         user: {
             type: Schema.Types.ObjectId,
@@ -35,10 +34,8 @@ const animationSchema = new Schema({
         }
     }],
     staffs: [{
-        staff: {
             type: Schema.Types.ObjectId,
             ref: "Staff"
-        }
     }]
 });
 

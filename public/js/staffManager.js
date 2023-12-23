@@ -1,4 +1,3 @@
-
 function loadStaff() {
 	if ($("option:checked").val() == ""){
 		$("#staff").hide();
@@ -6,16 +5,18 @@ function loadStaff() {
 	}
 	
 	var jsonObj = {};
-	jsonObj.codiceFiscale = $("option:checked").val();
-	var jsonStr = JSON.stringify(jsonObj);
+	jsonObj._csrf = $("input[name=_csrf]").attr('value');
+	jsonObj.codiceStaff = $("option:checked").val();
 			
 	$.ajax({
-		url:"StaffAdminControl",
+		url:"infoStaff",
 		type: "POST",
-		data: "json=" + encodeURIComponent(jsonStr),
+		data: jsonObj,
 		dataType: "json",
 		success: function(result){
 			$("#editStaff input[name=anniServizio]").val(result.anniServizio);
+			$("#editStaff input[name=nome]").val(result.nome);
+			$("#editStaff input[name=cognome]").val(result.cognome);
 			if (result.ruolo == "Direttore") {
 				$("#editStaff input[value=Direttore]").click();
 			} else if (result.ruolo == "Staff tecnico") {
