@@ -13,7 +13,7 @@
 	<div id="container" class="container pt-4 mt-4 bg-dark">
 		<% for(bd of bds) { %>
 			<div class="row pb-5">
-				<img class="float-left" src="" alt="cofanetto" onerror="this.src='img/bd/noimage.png' ">
+				<img class="float-left" src="data:image/String;base64,<%= (bd.immagine) ? bd.immagine.toString('base64') : "" %>" alt="cofanetto" onerror="this.src='img/bd/noimage.png' ">
 
 				<div class="descrizione mr-4">
 					<p class="testo"><a class="link" href=""><%= bd.animazione.titolo %></a> <br/>

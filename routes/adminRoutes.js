@@ -36,4 +36,13 @@ adminRoutes.post("/modificaStaff", adminController.postModificaStaff);
 adminRoutes.post("/inserimentoStaff", adminController.postInserimentoStaff);
 
 adminRoutes.post("/eliminaStaff", adminController.postEliminaStaff);
+
+adminRoutes.post("/infoBD", adminController.postInfoBd);
+
+adminRoutes.post("/modificaBD", upload.single("img"), adminController.postEditBd);
+
+adminRoutes.post("/inserimentoBD", upload.single("img"), adminController.postInsertBd);
+
+adminRoutes.post("/cancellaBD", adminController.postDeleteBd);
+
 export default adminRoutes;

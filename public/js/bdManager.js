@@ -1,4 +1,3 @@
-
 function loadBD(){
 	if ($("option:checked").val() == ""){
 		$("#cofanetto").hide();
@@ -6,16 +5,16 @@ function loadBD(){
 	}
 	
 	var jsonObj = {};
-	jsonObj.codiceCofanetto = $("option:checked").val();
-	var jsonStr = JSON.stringify(jsonObj);
+	jsonObj.codiceBD = $("option:checked").val();
+	jsonObj._csrf = $("input[name=_csrf]").val();
 	
 	$.ajax({
-		url:"CofanettoAdminControl",
+		url:"/infoBD",
 		type: "POST",
-		data: "json=" + encodeURIComponent(jsonStr),
+		data: jsonObj,
 		dataType: "json",
 		success: function(result){
-			$("#editBD textarea[name=contenuto]").val(result.contenuto);
+			$("#editBD textarea[name=descrizione]").val(result.descrizione);
 			$("#editBD input[name=prezzo]").val(result.prezzo);
 			
 			$("#cofanetto").show();
@@ -25,14 +24,14 @@ function loadBD(){
 }
 
 function checkForm(form){
-	var contenuto = form.contenuto;
+	var contenuto = form.descrizione;
 	var prezzo = form.prezzo;
 	
 	var patternContenuto = /^.{1,100}$/g;
 	var patternPrezzo = /^\d{1,}$/g;
 	
 	if (!patternContenuto.test(contenuto.value)){
-		$("#" + form.id + " .errorContenuto").html("Contenuto non valido<br/>");
+		$("#" + form.id + " .errorContenuto").html("Descrizione non valida<br/>");
 		contenuto.focus();
 		return false;
 	}

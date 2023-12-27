@@ -2,6 +2,7 @@ import User from "../model/user.js";
 import * as path from "path";
 import Animation from "../model/animation.js";
 import Staff from "../model/staff.js";
+import Bd from "../model/bd.js";
 
 const getPannelloAnimazioni = (req, res, next) => {
     Animation.find().populate("staffs").then(animations => {
@@ -24,9 +25,15 @@ const getPannelloStaff = (req, res, next) => {
 };
 
 const getPannelloBD = (req, res, next) => {
-    res.render(path.join("admin", "manageBD"), {
-
+    Bd.find().populate("animazione").then(bds => {
+        Animation.find().then(animations => {
+            res.render(path.join("admin", "manageBD"), {
+                bds: bds,
+                animations: animations
+            });
+        });
     });
+
 };
 
 const getPannelloUtenti = (req, res, next) => {
@@ -155,6 +162,51 @@ const postEliminaStaff = (req, res, next) => {
     });
 };
 
+const postInfoBd = (req, res, next) => {
+    Bd.findById(req.body.codiceBD).then(bd => {
+        res.json(bd);
+    }).catch(err => {
+        console.log(err);
+    });
+};
+
+const postEditBd = (req, res, next) => {
+    Bd.findById(req.body.codiceBD).then(bd => {
+        bd.prezzo = req.body.prezzo;
+        bd.descrizione = req.body.descrizione;
+        bd.immagine = (req.file) ? req.file.buffer : bd.immagine;
+
+        bd.save().then(() => {
+            res.redirect("/pannelloBD");
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+};
+
+const postInsertBd = (req, res, next) => {
+    const bd = new Bd({
+        animazione: req.body.codiceAnim,
+        descrizione: req.body.descrizione,
+        prezzo: req.body.prezzo,
+        immagine: (req.file) ? req.file.buffer : null
+    });
+
+    bd.save().then(() => {
+        res.redirect("/pannelloBD");
+    }).catch(err => {
+        console.log(err);
+    });
+};
+
+const postDeleteBd = (req, res, next) => {
+    Bd.findByIdAndDelete(req.body.codiceBD).then(() => {
+        res.redirect("pannelloBD");
+    }).catch(err => {
+        console.log(err);
+    });
+};
+
 export {getPannelloAnimazioni, getPannelloStaff, getPannelloBD, getPannelloUtenti, postInfoAnimazione, postModificaAnimazione, postAggiungiAnimazione,
     postCancellaAnimazione, postAggiungiStaffAnimazione, postEliminaStaffAnimazione, postInfoStaff, postModificaStaff, postInserimentoStaff,
-    postEliminaStaff};
+    postEliminaStaff, postInfoBd, postEditBd, postInsertBd, postDeleteBd};

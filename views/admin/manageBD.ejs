@@ -25,23 +25,24 @@
             
                 <div id="edit" class="collapse show" aria-labelledby="headingEdit" data-parent="#accordionBD">
                     <div class="card-body bg-dark">
-                        <form name="editBD" id="editBD" action="" method="post" onsubmit="return checkForm(this)">
-                            <input type="hidden" name="action" value="edit">
+                        <form name="editBD" id="editBD" action="/modificaBD?_c=<%= locals.csrf %>" enctype="multipart/form-data" method="post" onsubmit="return checkForm(this)">
+                            <input type="hidden" name="_csrf" value="<%= locals.csrf %>">
                             <span>Cofanetto: </span><select name="codiceBD" onchange="loadBD()">
                                 <option value="" disabled selected>Selezione un'opzione</option>
-                                <% %>
-                                    <option value="" > </option>
-                                <%  %>
+                                <% for (let bd of bds) { %>
+                                    <option value="<%= bd._id %>"><%= bd.animazione.titolo %></option>
+                                <% } %>
                             </select>
                             
                             <div id="cofanetto">
-                                <label>Contenuto:<br/>
-                                <textarea name="contenuto" rows="5" cols="30" maxlength="100" required></textarea></label> <br/>
+                                <label>Descrizione:<br/>
+                                <textarea name="descrizione" rows="5" cols="30" maxlength="100" required></textarea></label> <br/>
                                 <span class="error errorContenuto"></span>
                                 
                                 <label>Prezzo: <input type="number" class="numb" name="prezzo" min="1" required></label> <br/>
                                 <span class="error errorPrezzo"></span>
-                                            
+                                
+                                <label>Immagine: <input type="file" name="img"></label> <br/>
                                 <input type="submit"> <br/>
                             </div>
                             <span></span><br/>
@@ -60,21 +61,24 @@
                 </div>
                 <div id="insert" class="collapse" aria-labelledby="headingInsert" data-parent="#accordionBD">
                     <div class="card-body bg-dark">
-                        <form id="insertBD" action="" method="post" onsubmit="return checkForm(this)">
-                            <input type="hidden" name="action" value="insert">
+                        <form id="insertBD" action="/inserimentoBD?_c=<%= locals.csrf %>" enctype="multipart/form-data" method="post" onsubmit="return checkForm(this)">
+                            <input type="hidden" name="_csrf" value="<%= locals.csrf %>">
                             Animazione: <select name="codiceAnim">
-                                <% %>
-                                    <option value="<%= anim.getCodice() %>" > <%= anim.getNome() %></option>
-                                <%  %>
+                                <option value="" disabled selected>Selezione un'opzione</option>
+                                <% for (let el of animations) {%>
+                                    <option value="<%= el._id %>"><%= el.titolo %></option>
+                                <% } %>
                             </select> <br/>
                             
-                            <label>Contenuto: <br/>
-                            <textarea name="contenuto" rows="5" cols="30" maxlength="100" required></textarea></label> <br/>
+                            <label>Descrizione: <br/>
+                            <textarea name="descrizione" rows="5" cols="30" maxlength="100" required></textarea></label> <br/>
                             <span class="error errorContenuto"></span>
                             
                             <label>Prezzo: <input type="number" class="numb" name="prezzo" min="1" required></label> <br/>
                             <span class="error errorPrezzo"></span>
                                             
+                            <label>Immagine: <input type="file" name="img"></label> <br/>
+
                             <input type="submit"> <br/>
                             <span> </span><br/>
                         </form>
@@ -91,14 +95,14 @@
                 </div>
                 <div id="delete" class="collapse" aria-labelledby="headingDelete" data-parent="#accordionBD">
                     <div class="card-body bg-dark">
-                        <form id="bd" action="" method="post">
-                            <input type="hidden" name="action" value="delete">
+                        <form id="bd" action="/cancellaBD" method="post">
+                            <input type="hidden" name="_csrf" value="<%= locals.csrf %>">
                             <span>Cofanetto: </span>
                             
                             <select name="codiceBD">
-                            <% %>
-                                <option value="" ></option>
-                            <%  %>
+                                <% for (let el of bds) { %>
+                                    <option value="<%= el._id %>"><%= el.animazione.titolo + " | "  + el.prezzo %></option>
+                                <% } %>
                             </select> 
                             
                             <input class="ml-2" type="submit"> <br/>
@@ -107,31 +111,6 @@
                     </div>
                 </div>
             </div>
-                <div class="card bg-dark">
-                    <div class="card-header bg-light" id="headingImage">
-                        <h2 class="mb-0">
-                            <button class="btn btn-light btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#loadImage" aria-expanded="false" aria-controls="loadImage">
-                            Aggiungi o Modifica immagine di un cofanetto
-                            </button>
-                        </h2>
-                    </div>
-                <div id="loadImage" class="collapse" aria-labelledby="headingImage" data-parent="#accordionAnim">
-                    <div class="card-body bg-dark">
-                        <form action="" method="post" enctype="multipart/form-data">
-                            <span>Cofanetto: </span>
-                            <select name="bd">
-                            <% %>
-                                <option value="" > </option>
-                            <%  %>
-                            </select> 
-                            <br/>
-                            <input type="file" name="image" accept="image/png" required>
-                            <br/>
-                            <input type="submit"> <br/>
-                        </form>
-                    </div>
-                </div>
-            </div> 
         </div>	     
     </div>
 	
