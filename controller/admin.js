@@ -3,6 +3,7 @@ import * as path from "path";
 import Animation from "../model/animation.js";
 import Staff from "../model/staff.js";
 import Bd from "../model/bd.js";
+import bcrypt from "bcrypt";
 
 const getPannelloAnimazioni = (req, res, next) => {
     Animation.find().populate("staffs").then(animations => {
@@ -37,9 +38,14 @@ const getPannelloBD = (req, res, next) => {
 };
 
 const getPannelloUtenti = (req, res, next) => {
-    res.render(path.join("admin", "manageUser"), {
-
+    User.find().then(users => {
+        res.render(path.join("admin", "manageUser"), {
+            users: users
+        });
+    }).catch(err => {
+        console.log(err);
     });
+
 };
 
 const postInfoAnimazione = (req, res, next) => {
@@ -207,6 +213,55 @@ const postDeleteBd = (req, res, next) => {
     });
 };
 
+const postInfoUtente = (req, res, next) => {
+    User.findById(req.body.codiceUtente).then(user => {
+        res.json(user);
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+const postEditUtente = (req, res, next) => {
+    User.findById(req.body.codiceUtente).then(user => {
+        getHashPassword(req.body.password).then(password => {
+            user.username = req.body.username;
+            user.password = (password) ? password : user.password;
+            user.email = req.body.mail;
+            user.nome = req.body.nome;
+            user.cognome = req.body.cognome;
+            user.dataNascita = new Date(req.body.dataNascita);
+            user.indirizzo.città = req.body.city;
+            user.indirizzo.via = req.body.via;
+            user.indirizzo.CAP = req.body.cap;
+            user.indirizzo.tipo = req.body.tipo;
+
+            user.save().then(() => {
+                res.redirect("/pannelloUtenti")
+            });
+        })
+
+    }).catch(err => {
+        console.log(err);
+    });
+};
+
+async function getHashPassword(password) {
+    if(password !== ""){
+        return bcrypt.hash(password, 10, (err, hash) => {
+            return hash;
+        });
+    } else 
+        return "";
+}
+
+const postDeleteUtente = (req, res, next) => {
+    User.findByIdAndDelete(req.body.codiceUtente).then(() => {
+        res.redirect("/pannelloUtenti")
+    }).catch(err => {
+        console.log(err);
+    });
+};
+
 export {getPannelloAnimazioni, getPannelloStaff, getPannelloBD, getPannelloUtenti, postInfoAnimazione, postModificaAnimazione, postAggiungiAnimazione,
     postCancellaAnimazione, postAggiungiStaffAnimazione, postEliminaStaffAnimazione, postInfoStaff, postModificaStaff, postInserimentoStaff,
-    postEliminaStaff, postInfoBd, postEditBd, postInsertBd, postDeleteBd};
+    postEliminaStaff, postInfoBd, postEditBd, postInsertBd, postDeleteBd, postInfoUtente, postEditUtente, postDeleteUtente};

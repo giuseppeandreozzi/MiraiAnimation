@@ -24,19 +24,36 @@
 		
 		    <div id="edit" class="collapse show" aria-labelledby="headingEdit" data-parent="#accordionUser">
 		      <div class="card-body bg-dark">
-				<form id="editForm" name="editForm" action="" method="post" onsubmit="return checkEditForm()">
-					<input type="hidden" name="action" value="edit">
-							
-					<label for="userEdit">Username:</label> <input type="text" id="userEdit" name="username"> <br/>
+				<form id="editForm" name="editForm" action="/modificaUtente" method="post" onsubmit="return checkEditForm()">
+					<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
+					<span>Utente: </span>
+					<select name="codiceUtente" onchange="loadUser()">
+						<option value="" disabled selected>Seleziona un'opzione</option>
+						<% for (let el of users) { %>
+							<option value="<%= el._id %>"><%= el.username %></option>
+						<% } %>
+					</select> 
 					<span class="error" id="errorUserEdit"></span>
 					
-					<span id="tipo" class="bold">Tipo:</span> <br/>
-					<input type="radio" name="tipo" value="registered"> Utente <br/>
-					<input type="radio" name="tipo" value="admin"> Amministratore <br/>
-					<span class="error" id="errorTipo"></span>
-					
-					<input type="submit" value="Conferma"> <br/>
-					
+					<div class="py-2" id="userDiv">
+						Username: <input type="text" name="username"><br/>
+						Password: <input type="password" name="password"><br/>
+						E-mail: <input type="text" name="mail"><br/>
+						Nome: <input type="text" name="nome"><br/>
+						Cognome: <input type="text" name="cognome"><br/>
+						Data di Nascita: <input type="text" name="dataNascita"><br/>
+						Indirizzo:<br/>
+						Città: <input type="text" name="city"><br/>
+						Via: <input type="text" name="via"><br/>
+						CAP: <input type="text" name="cap"><br/>
+						<span id="tipo" class="bold">Tipo:</span> <br/>
+						<input type="radio" name="tipo" value="user"> Utente <br/>
+						<input type="radio" name="tipo" value="admin"> Amministratore <br/>
+						<span class="error" id="errorTipo"></span>
+						
+
+						<input type="submit" value="Conferma"> <br/>
+					</div>
 				</form>
 				<span> </span><br/>
 		      </div>
@@ -53,9 +70,14 @@
 		    </div>
 		    <div id="delete" class="collapse" aria-labelledby="headingDelete" data-parent="#accordionUser">
 		      <div class="card-body bg-dark">
-				<form id="deleteForm" name="deleteForm" action="" method="post" onsubmit="return checkDelForm()">
-					<input type="hidden" name="action" value="delete">
-					<label for="userDel">Username:</label> <input type="text" id="userDel" name="username"> <br/>
+				<form id="deleteForm" name="deleteForm" action="/cancellaUtente" method="post" onsubmit="return checkDelForm()">
+					<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
+					<select name="codiceUtente">
+						<option value="" disabled selected>Seleziona un'opzione</option>
+						<% for (let el of users) { %>
+							<option value="<%= el._id %>"><%= el.username %></option>
+						<% } %>
+					</select> 
 					<span class="error" id="errorDel"></span>
 					<input type="submit" value="Conferma"> <br/>
 				</form>

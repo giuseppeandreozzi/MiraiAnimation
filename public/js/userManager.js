@@ -1,3 +1,38 @@
+function loadUser() {
+	if ($("option:checked").val() == ""){
+		$("#userDiv").hide();
+		return;
+	}
+	
+	var jsonObj = {};
+	jsonObj._csrf = $("input[name=_csrf]").attr('value');
+	jsonObj.codiceUtente = $("option:checked").val();
+			
+	$.ajax({
+		url:"/infoUtente",
+		type: "POST",
+		data: jsonObj,
+		dataType: "json",
+		success: function(result){
+			$("#editForm input[name=username]").val(result.username);
+			$("#editForm input[name=mail]").val(result.email);
+			$("#editForm input[name=nome]").val(result.nome);
+			$("#editForm input[name=cognome]").val(result.cognome);
+			$("#editForm input[name=dataNascita]").val(result.dataNascita);
+			$("#editForm input[name=city]").val(result.indirizzo.città);
+			$("#editForm input[name=via]").val(result.indirizzo.via);
+			$("#editForm input[name=cap]").val(result.indirizzo.CAP);
+			if (result.tipo == "user") {
+				$("#editForm input[value=user]").click();
+			} else if (result.tipo == "admin") {
+				$("#editForm input[value=admin]").click();
+			}
+			
+			$("#userDiv").show();
+				     
+		}
+	});
+}
 
 function checkEditForm(){
 	var user = editForm.username;
@@ -15,7 +50,7 @@ function checkEditForm(){
 		return false;
 	}
 	
-	if (tipo != "admin" && tipo != "registered"){
+	if (tipo != "admin" && tipo != "user"){
 		spanError = document.getElementById("errorTipo");
 		spanError.innerHTML = "Tipo non valido<br/>";
 

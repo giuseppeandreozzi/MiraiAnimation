@@ -45,4 +45,10 @@ adminRoutes.post("/inserimentoBD", upload.single("img"), adminController.postIns
 
 adminRoutes.post("/cancellaBD", adminController.postDeleteBd);
 
-export default adminRoutes;
+adminRoutes.post("/infoUtente", adminController.postInfoUtente);
+
+adminRoutes.post("/modificaUtente", adminController.postEditUtente);
+
+adminRoutes.post("/cancellaUtente", adminController.postDeleteUtente);
+
+export default adminRoutes; 
