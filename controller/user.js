@@ -1,4 +1,5 @@
 import User from "../model/user.js";
+import Animation from "../model/animation.js";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import * as crypto from "crypto";
@@ -341,12 +342,22 @@ const getFattura = (req, res, next) => {
     }).catch(err =>{
         console.log(err);
     });
-
-
-
-    
-
 };
 
+const postInsertRecensione = (req, res, next) => {
+    Animation.findById(req.body.codiceAnimazione).then(anim => {
+        anim.recensioni.push({
+            user: req.session.user._id,
+            voto: req.body.voto,
+            commento: req.body.commento
+        });
+
+        anim.save().then(() =>{
+            res.redirect("/animation/" + req.body.codiceAnimazione);
+        });
+    }).catch(err =>{
+        console.log(err);
+    });
+};
 export {getLogOut, getReset, getResetPassword, postResetPassword, getAccount, postAccount, getCarrello, postCarrello, getCheckout, getCheckoutSuccess, 
-    postDeleteCart, getOrdini, getFattura};
+    postDeleteCart, getOrdini, getFattura, postInsertRecensione};

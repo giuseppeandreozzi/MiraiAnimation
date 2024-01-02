@@ -29,4 +29,6 @@ userRoutes.get("/ordini", userController.getOrdini);
 
 userRoutes.get("/fattura/:numOrdine", userController.getFattura);
 
+userRoutes.post("/aggiungiRecensione", userController.postInsertRecensione);
+
 export default userRoutes;

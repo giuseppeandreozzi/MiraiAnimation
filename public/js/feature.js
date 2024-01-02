@@ -1,46 +1,13 @@
-var vote = 0;
-		
 function checkStar(id){
-	vote = id[0];
 	var subId = id.substring(1);
-			
+
+	$("input[name=voto]").val(id[0]);
 	for (var i = 1; i <= 5; i++){
-		if (i <= vote)
+		if (i <= id[0])
 			$("#" + i + subId).css("color", "orange");
 		else
 			$("#" + i + subId).css("color", "black");
 	}
-}
-		
-function sendReview(){
-	var jsonObj = {};
-	jsonObj.vote = vote;
-	jsonObj.comment = $("textarea").val();
-	jsonObj.codiceAnimazione = $("input[name=animation]").val();
-	var jsonStr = JSON.stringify(jsonObj);
-	
-	if(!checkForm())
-		return false;
-	
-	$.ajax({
-		url:"./ReviewControl",
-		type: "POST",
-		data: "json=" + encodeURIComponent(jsonStr),
-		success: function(result){
-					if(result.error){
-						$("#errorComment").html(result.error);
-						return;
-					}
-					
-					var strVote = "";
-					for (var i = 0; i < result.vote; i++){
-					strVote += "<i class='fa fa-star fa-lg'></i>";
-					}
-					  
-				    $("#newReview").html("User: " + result.user + "<br/> Voto: " + strVote + "<br/> Commento: <br/>" + result.comment)
-				     
-			}
-	});
 }
 
 function checkForm(){

@@ -27,7 +27,7 @@ const getStaff = (req, res, next) => {
 };
 
 const getAnimationPage = (req, res, next) => {
-    Animation.findById(req.params.id).then(anim => {
+    Animation.findById(req.params.id).populate("recensioni.user").populate("staffs").then(anim => {
         res.render("animationPage.ejs", {
             animation: anim
         });

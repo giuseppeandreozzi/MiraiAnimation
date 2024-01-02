@@ -27,44 +27,57 @@
 				
 				<b>Genere:</b> <%= animation.genere %> </p>
 			
-				<p><b>Staff</b><br/>
-					<span></span> <br/>
+				<p><b>Staff:</b><br/>
+				<% for (let el of animation.staffs) { %> 
+					<span><%= el.nome + " " + el.cognome + " | " + el.ruolo %></span> <br/>
+				<% } %>
 			</div>
 		</div>
 		<div id="rec" class="row">
 			<div class="col">
-			<span id="recensioni">Recensioni</span><br/>	
+				<span id="insertrec">Inserisci una recensione</span> <br/>
+				<% if (locals.user) { %>
+				<span>Voto</span>
+					<ul id="star">
+						<li class="fa fa-star fa-2x" id="1star" onclick="checkStar(this.id)"></li>
+						<li class="fa fa-star fa-2x" id="2star" onclick="checkStar(this.id)"></li>
+						<li class="fa fa-star fa-2x" id="3star" onclick="checkStar(this.id)"></li>
+						<li class="fa fa-star fa-2x" id="4star" onclick="checkStar(this.id)"></li>
+						<li class="fa fa-star fa-2x" id="5star" onclick="checkStar(this.id)"></li>
+					</ul>
+					<form name="reviewForm" action="/aggiungiRecensione" method="POST">
+						<input type="hidden" name="codiceAnimazione" value="<%= animation._id %>">
+						<input type="hidden" name="_csrf" value="<%= locals.csrf %>">
+						<input type="hidden" name="voto" value="">
+						<span id="comment">Commento</span> <br/> 
+						<textarea name="commento" maxlength="255" rows="4" cols="30"></textarea><br/> <br/>	
+						<input type="submit" value="Inserisci"> <br/>
+					</form>
+					<span class="error" id="errorComment"></span><br/>
+				<% } else { %>
+					<p> Devi essere registrato per scrivere una recensione </p>
+				<% } %>
+
+				<span id="recensioni">Recensioni</span><br/>	
+				<% for(let el of animation.recensioni) { %>
+					<p>
+						Utente: <%= el.user.username %><br/>
+						Voto: <%= el.voto %><br/>
+						Commento:<br/>
+						<span>
+							<%= el.commento %>
+						</span>
+					</p>
+				<% } %>
 			
-			
-			<p id="newReview"></p>
-			
-			<span id="insertrec">Inserisci una recensione</span> <br/>
-			<% if (true) { %>
-			<span>Voto</span>
-				<ul id="star">
-					<li class="fa fa-star fa-2x" id="1star" onclick="checkStar(this.id)"></li>
-					<li class="fa fa-star fa-2x" id="2star" onclick="checkStar(this.id)"></li>
-					<li class="fa fa-star fa-2x" id="3star" onclick="checkStar(this.id)"></li>
-					<li class="fa fa-star fa-2x" id="4star" onclick="checkStar(this.id)"></li>
-					<li class="fa fa-star fa-2x" id="5star" onclick="checkStar(this.id)"></li>
-				</ul> <br/>
-				<form name="reviewForm">
-					<input type="hidden" name="animation" value="">
-					<span id="comment">Commento</span> <br/> 
-					<textarea name="comment" maxlength="255" rows="4" cols="30"></textarea><br/> <br/>	
-					<input type="button" value="Inserisci" onclick="sendReview()"> <br/>
-				</form>
-				<span class="error" id="errorComment"></span><br/>
-			<% } else { %>
-				<p> Devi essere registrato per scrivere una recensione </p>
-			<% } %>
+
 			</div>
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-	<script src="js/feature.js"></script>
+	<script src="/js/feature.js"></script>
 	
 </body>
 </html>
