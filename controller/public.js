@@ -5,6 +5,7 @@ import User from "../model/user.js";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import * as crypto from "crypto";
+import {validationResult} from "express-validator";
 
 const getAnimation = (req, res, next) => {
     Animation.find().then(animations => {
@@ -55,6 +56,14 @@ const getHome = (req, res, next) => {
 };
 
 const postSignUp = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()){
+        console.log(error)
+        return res.render("home.ejs", {
+            errorType: "sign",
+            errorString: "Errore nel campo " + error.errors[0].path
+        });
+    }
     User.find({email: req.body.email}).then(result => {
         if(result.length != 0){
             res.render("home.ejs", {
@@ -157,6 +166,14 @@ const getVerify = (req, res, next) => {
 };
 
 const postLogIn = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()){
+        return res.render("home.ejs", {
+            errorType: "log",
+            errorString: "Errore nel campo " + error.errors[0].path
+        });
+    }
+
     User.findOne({username: req.body.username}).then(user => {
         if(!user){
             return res.render("home.ejs", {
