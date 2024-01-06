@@ -28,6 +28,11 @@ const getStaff = (req, res, next) => {
 };
 
 const getAnimationPage = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()){
+        return res.redirect("/animation");
+    }
+
     Animation.findById(req.params.id).populate("recensioni.user").populate("staffs").then(anim => {
         res.render("animationPage.ejs", {
             animation: anim
@@ -143,6 +148,10 @@ const postSignUp = (req, res, next) => {
 };
 
 const getVerify = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()){
+        return res.redirect("/");
+    }
     const token = req.params.token.trim();
 
     User.findOne({"datiVerifica.codice": token}).then(user => {

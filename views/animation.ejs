@@ -5,8 +5,8 @@
 	<title>Lista Animazioni</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link rel="stylesheet" href="css/navbar.css" type="text/css">
-	<link rel="stylesheet" href="css/raccolta.css" type="text/css">
+	<link rel="stylesheet" href="/css/navbar.css" type="text/css">
+	<link rel="stylesheet" href="/css/raccolta.css" type="text/css">
 </head>
 <body>
 	<%- include("./include/navbar.ejs") %>
@@ -15,7 +15,7 @@
 			<% for (anim of animations) { %>
 			<div class="col-5 mx-auto px-0 mt-5 text-center">
 				<a class="animation" href="animation/<%= anim._id %>">
-					<img src="data:image/String;base64,<%= (anim.immagine) ? anim.immagine.toString('base64') : "" %>" alt="logo animazione" onerror="this.src='img/anim/noimage.png' "> <br/>
+					<img src="data:image/String;base64,<%= (anim.immagine) ? anim.immagine.toString('base64') : "" %>" alt="logo animazione" onerror="this.src='/img/anim/noimage.png' "> <br/>
 					<span><%= anim.titolo %></span>
 				</a>
 			</div>

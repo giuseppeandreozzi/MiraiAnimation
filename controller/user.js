@@ -8,6 +8,7 @@ import bd from "../model/bd.js";
 import * as Mongoose from "mongoose";
 import * as path from "path";
 import PDF from "pdfkit";
+import {validationResult} from "express-validator";
 
 const getLogOut = (req, res, next) => {
     req.session.destroy(err => {
@@ -64,6 +65,11 @@ const getReset = (req, res, next) => {
 };
 
 const getResetPassword = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()){
+        return res.redirect("/");
+    }
+
     User.findOne({"datiVerifica.codice": req.params.codice}).then(user => {
         if(user.datiVerifica.scadenza > new Date()){
             res.render("user/resetPassword.ejs", {
@@ -80,6 +86,15 @@ const getResetPassword = (req, res, next) => {
 
 const postResetPassword = (req, res, next) => {
     User.findById(req.body._id).then(user => {
+        let error = validationResult(req);
+        if(!error.isEmpty()){
+            return res.render("user/resetPassword.ejs", {
+                _id: user._id,
+                errorString: error.errors.msg,
+                success: null
+            });
+        }
+
         bcrypt.compare(req.body.oldPassword, user.password, (err, result) => {
             if(err || !result){
                 res.render("user/resetPassword.ejs", {
@@ -109,23 +124,34 @@ const postResetPassword = (req, res, next) => {
 
 const getAccount = (req, res, next) => {
     res.render("user/account.ejs", {
-        success: ""
+        success: "",
+        error: ""
     });
 };
 
 const postAccount = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        return res.render("user/account.ejs", {
+            success: "",
+            error: "Valore non valido nel campo " + error.errors[0].path
+        });
+    }
+
     User.findById(req.body._id).then(user => {
         user.nome = req.body.nome;
         user.cognome = req.body.cognome;
         user.indirizzo.via = req.body.via;
-        user.indirizzo.città = req.body.città;
+        user.indirizzo.città = req.body.city;
         user.indirizzo.CAP = req.body.cap;
         user.dataNascita = new Date(req.body.dataNascita);
 
         user.save().then(user => {
             req.session.user = user;
+            res.locals.user = req.session.user;
             res.render("user/account.ejs", {
-                success: "Dati modificati con successo"
+                success: "Dati modificati con successo",
+                error: ""
             });
         }).catch(err => {
             console.log(err);
@@ -150,6 +176,11 @@ const getCarrello = (req, res, next) => {
 };
 
 const postCarrello = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        return res.redirect("/shop");
+    }
+
     User.findById(req.session.user._id).then(user => {
         user.carrello.push({
             quantity: req.body.quantity,
@@ -160,7 +191,7 @@ const postCarrello = (req, res, next) => {
         user.save().then(user => {
             req.session.user = user;
 
-            res.redirect("/");
+            res.redirect("/shop");
         }).catch(err => {
             console.log(err);
         });
@@ -269,6 +300,10 @@ const getOrdini = (req, res, next) => {
 };
 
 const getFattura = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()){
+        return res.redirect("/ordini");
+    }
     const numeroOrdine = decodeURIComponent(req.params.numOrdine);
     const doc = new PDF({
         font: "Helvetica",
@@ -345,6 +380,11 @@ const getFattura = (req, res, next) => {
 };
 
 const postInsertRecensione = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()){
+        return res.redirect("/animation/" + req.body.codiceAnimazione);
+    }
+
     Animation.findById(req.body.codiceAnimazione).then(anim => {
         anim.recensioni.push({
             user: req.session.user._id,
