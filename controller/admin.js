@@ -4,6 +4,7 @@ import Animation from "../model/animation.js";
 import Staff from "../model/staff.js";
 import Bd from "../model/bd.js";
 import bcrypt from "bcrypt";
+import { validationResult } from "express-validator";
 
 const getPannelloAnimazioni = (req, res, next) => {
     Animation.find().populate("staffs").then(animations => {
@@ -20,7 +21,9 @@ const getPannelloAnimazioni = (req, res, next) => {
 const getPannelloStaff = (req, res, next) => {
     Staff.find().then(staffs => {
         res.render(path.join("admin", "manageStaff"), {
-            staffs: staffs
+            staffs: staffs,
+            errorEdit: "",
+            errorInsert: ""
         });
     });
 };
@@ -30,7 +33,9 @@ const getPannelloBD = (req, res, next) => {
         Animation.find().then(animations => {
             res.render(path.join("admin", "manageBD"), {
                 bds: bds,
-                animations: animations
+                animations: animations,
+                errorEdit: "",
+                errorInsert: ""
             });
         });
     });
@@ -40,7 +45,8 @@ const getPannelloBD = (req, res, next) => {
 const getPannelloUtenti = (req, res, next) => {
     User.find().then(users => {
         res.render(path.join("admin", "manageUser"), {
-            users: users
+            users: users,
+            errorEdit: ""
         });
     }).catch(err => {
         console.log(err);
@@ -49,6 +55,11 @@ const getPannelloUtenti = (req, res, next) => {
 };
 
 const postInfoAnimazione = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        return res.redirect("/pannelloAnimazioni");
+    }
+
     Animation.findById(req.body.codiceAnimazione).then(anim => {
         res.json(anim);
     }).catch(err => {
@@ -57,6 +68,10 @@ const postInfoAnimazione = (req, res, next) => {
 };
 
 const postModificaAnimazione = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        res.redirect("/pannelloAnimazioni")
+    }
     Animation.findById(req.body._id).then(anim => {
         anim.titolo = req.body.titolo;
         anim.genere = req.body.genere;
@@ -65,7 +80,7 @@ const postModificaAnimazione = (req, res, next) => {
         anim.immagine = (req.file) ? req.file.buffer : anim.immagine;
 
         anim.save().then(anim => {
-            res.redirect("pannelloAnimazioni");
+            res.redirect("/pannelloAnimazioni");
         }).catch(err => {
             console.log(err);
         });
@@ -73,6 +88,11 @@ const postModificaAnimazione = (req, res, next) => {
 };
 
 const postAggiungiAnimazione = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        res.redirect("/pannelloAnimazioni")
+    }
+
     const anim = new Animation({
         titolo: req.body.titolo,
         genere: req.body.genere,
@@ -82,26 +102,36 @@ const postAggiungiAnimazione = (req, res, next) => {
     });
 
     anim.save().then(() => {
-        res.redirect("pannelloAnimazioni");
+        res.redirect("/pannelloAnimazioni");
     }).catch(err => {
         console.log(err);
     });
 };
 
 const postCancellaAnimazione = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        res.redirect("/pannelloAnimazioni")
+    }
+
     Animation.findByIdAndDelete(req.body._id).then(() =>{
-        res.redirect("pannelloAnimazioni");
+        res.redirect("/pannelloAnimazioni");
     }).catch(err => {
         console.log(err);
     });
 };
 
 const postAggiungiStaffAnimazione = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        res.redirect("/pannelloAnimazioni")
+    }
+
     Animation.findById(req.body._idAnimazione).then(anim => {
         anim.staffs.push(req.body._idStaff);
 
         anim.save().then(() => {
-            res.redirect("pannelloAnimazioni");
+            res.redirect("/pannelloAnimazioni");
         }).catch(err => {
             console.log(err);
         });
@@ -109,15 +139,17 @@ const postAggiungiStaffAnimazione = (req, res, next) => {
 };
 
 const postEliminaStaffAnimazione = (req, res, next) => {
-    if(!req.body._idStaff)
-        res.redirect("pannelloAnimazioni");
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        res.redirect("/pannelloAnimazioni")
+    }
 
     Animation.findById(req.body._idAnimazione).then(anim => {
         let index = anim.staffs.indexOf(req.body._idStaff)
         anim.staffs.splice(index, 1);
         
         anim.save().then(() => {
-            res.redirect("pannelloAnimazioni");
+            res.redirect("/pannelloAnimazioni");
         }).catch(err => {
             console.log(err);
         });
@@ -125,12 +157,28 @@ const postEliminaStaffAnimazione = (req, res, next) => {
 };
 
 const postInfoStaff = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        res.redirect("/pannelloStaff")
+    }
+
     Staff.findById(req.body.codiceStaff).then(staff => {
         res.json(staff);
     })
 };
 
 const postModificaStaff = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        Staff.find().then(staffs => {
+            return res.render(path.join("admin", "manageStaff"), {
+                staffs: staffs,
+                errorEdit: "Errore nel campo " + error.errors[0].path,
+                errorInsert: ""
+            });
+        });
+    }
+
     Staff.findById(req.body.codiceStaff).then(staff => {
         staff.nome = req.body.nome;
         staff.cognome = req.body.cognome;
@@ -146,21 +194,37 @@ const postModificaStaff = (req, res, next) => {
 };
 
 const postInserimentoStaff = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        Staff.find().then(staffs => {
+            return res.render(path.join("admin", "manageStaff"), {
+                staffs: staffs,
+                errorEdit: "",
+                errorInsert: "Errore nel campo " + error.errors[0].path
+            });
+        });
+    }
+
     let staff = new Staff({
         nome: req.body.nome,
-        cognome : req.body.cognome,
-        anniServizio : req.body.anniServizio,
-        ruolo : req.body.ruolo
+        cognome: req.body.cognome,
+        anniServizio: req.body.anniServizio,
+        ruolo: req.body.ruolo
     });
 
     staff.save().then(() => {
-        res.redirect("/pannelloStaff");
+        
     }).catch(err => {
         console.log(err);
     });
 };
 
 const postEliminaStaff = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        return res.redirect("/pannelloStaff");
+    }
+
     Staff.findByIdAndDelete(req.body.codiceStaff).then(() =>{
         res.redirect("/pannelloStaff");
     }).catch(err => {
@@ -169,6 +233,11 @@ const postEliminaStaff = (req, res, next) => {
 };
 
 const postInfoBd = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        return res.redirect("/pannelloBD");
+    }
+
     Bd.findById(req.body.codiceBD).then(bd => {
         res.json(bd);
     }).catch(err => {
@@ -177,6 +246,20 @@ const postInfoBd = (req, res, next) => {
 };
 
 const postEditBd = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        Bd.find().populate("animazione").then(bds => {
+            Animation.find().then(animations => {
+                return res.render(path.join("admin", "manageBD"), {
+                    bds: bds,
+                    animations: animations,
+                    errorEdit: "Errore nel campo " + error.errors[0].path,
+                    errorInsert: ""
+                });
+            });
+        });
+    }
+
     Bd.findById(req.body.codiceBD).then(bd => {
         bd.prezzo = req.body.prezzo;
         bd.descrizione = req.body.descrizione;
@@ -191,6 +274,20 @@ const postEditBd = (req, res, next) => {
 };
 
 const postInsertBd = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        Bd.find().populate("animazione").then(bds => {
+            Animation.find().then(animations => {
+                return res.render(path.join("admin", "manageBD"), {
+                    bds: bds,
+                    animations: animations,
+                    errorEdit: "",
+                    errorInsert: "Errore nel campo " + error.errors[0].path
+                });
+            });
+        });
+    }
+
     const bd = new Bd({
         animazione: req.body.codiceAnim,
         descrizione: req.body.descrizione,
@@ -206,14 +303,24 @@ const postInsertBd = (req, res, next) => {
 };
 
 const postDeleteBd = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        return res.redirect("/pannelloBD");
+    }
+
     Bd.findByIdAndDelete(req.body.codiceBD).then(() => {
-        res.redirect("pannelloBD");
+        res.redirect("/pannelloBD");
     }).catch(err => {
         console.log(err);
     });
 };
 
 const postInfoUtente = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        return res.redirect("/pannelloUtenti");
+    }
+
     User.findById(req.body.codiceUtente).then(user => {
         res.json(user);
     }).catch(err => {
@@ -222,6 +329,18 @@ const postInfoUtente = (req, res, next) => {
 }
 
 const postEditUtente = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        User.find().then(users => {
+            return res.render(path.join("admin", "manageUser"), {
+                users: users,
+                errorEdit: "Errore nel campo " + error.errors[0].path
+            });
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+
     User.findById(req.body.codiceUtente).then(user => {
         getHashPassword(req.body.password).then(password => {
             user.username = req.body.username;
@@ -255,6 +374,11 @@ async function getHashPassword(password) {
 }
 
 const postDeleteUtente = (req, res, next) => {
+    let error = validationResult(req);
+    if(!error.isEmpty()) {
+        return res.redirect("/pannelloUtenti");
+    }
+
     User.findByIdAndDelete(req.body.codiceUtente).then(() => {
         res.redirect("/pannelloUtenti")
     }).catch(err => {

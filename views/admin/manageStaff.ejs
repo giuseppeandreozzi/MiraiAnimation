@@ -51,7 +51,7 @@
                                 <input class="mt-2" type="submit"> <br/>
                             </div>
                         </form>
-                        <span></span><br/>
+                        <span class="error"><%= errorEdit %></span><br/>
                     </div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                                                 
                             <input class="mt-2" type="submit"> <br/>
                         </form>
-                        <span> </span><br/>
+                        <span class="error"><%= errorInsert %></span><br/>
                     </div>
                 </div>
             </div>
@@ -108,10 +108,8 @@
                                     <option value="<%= staff._id %>"> <%= staff.nome + " " + staff.cognome + " | " + staff.ruolo %></option>
                                 <% } %>
                                 </select>
-                                
                                 <input class="ml-2" type="submit">
                         </form>
-                        <span> </span><br/>
                     </div>
                 </div>
             </div>

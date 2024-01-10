@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as adminController from "../controller/admin.js";
 import multer from "multer";
+import { body } from "express-validator";
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -17,38 +18,54 @@ adminRoutes.get("/pannelloBD", adminController.getPannelloBD);
 
 adminRoutes.get("/pannelloUtenti", adminController.getPannelloUtenti);
 
-adminRoutes.post("/infoAnimazione", adminController.postInfoAnimazione);
+adminRoutes.post("/infoAnimazione", body("codiceAnimazione").isMongoId(), adminController.postInfoAnimazione);
 
-adminRoutes.post("/modificaAnimazione", upload.single("immagine"), adminController.postModificaAnimazione);
+adminRoutes.post("/modificaAnimazione", body("_id").isMongoId(), body("titolo").isString(), body("genere").isString(), 
+                    body("tipo").custom(value => {
+                        return value === "serie" || value === "film";
+                    }), body("tipo").isDate(), upload.single("immagine"), adminController.postModificaAnimazione);
 
-adminRoutes.post("/aggiungiAnimazione", upload.single("immagine"), adminController.postAggiungiAnimazione);
+adminRoutes.post("/aggiungiAnimazione", body("titolo").isString(), body("genere").isString(), 
+                    body("tipo").custom(value => {
+                        return value === "serie" || value === "film";
+                    }), body("tipo").isDate(),upload.single("immagine"), adminController.postAggiungiAnimazione);
 
-adminRoutes.post("/cancellaAnimazione", adminController.postCancellaAnimazione);
+adminRoutes.post("/cancellaAnimazione", body("_id").isMongoId(), adminController.postCancellaAnimazione);
 
-adminRoutes.post("/aggiungiStaffAnimazione", adminController.postAggiungiStaffAnimazione);
+adminRoutes.post("/aggiungiStaffAnimazione", body("_idAnimazione").isMongoId(), body("_idStaff").isMongoId(), adminController.postAggiungiStaffAnimazione);
 
-adminRoutes.post("/eliminaStaffAnimazione", adminController.postEliminaStaffAnimazione);
+adminRoutes.post("/eliminaStaffAnimazione", body("_idAnimazione").isMongoId(), body("_idStaff").isMongoId(), adminController.postEliminaStaffAnimazione);
 
-adminRoutes.post("/infoStaff", adminController.postInfoStaff);
+adminRoutes.post("/infoStaff", body("codiceStaff").isMongoId(), adminController.postInfoStaff);
 
-adminRoutes.post("/modificaStaff", adminController.postModificaStaff);
+adminRoutes.post("/modificaStaff", body("codiceStaff").isMongoId(), body("nome").isString(), body("cognome").isString(), body("anniServizio").isNumeric(),
+                    body("ruolo").custom(value => {
+                        return value === "Direttore" || value === "Staff tecnico" || value === "Regista";
+                    }), adminController.postModificaStaff);
 
-adminRoutes.post("/inserimentoStaff", adminController.postInserimentoStaff);
+adminRoutes.post("/inserimentoStaff", body("nome").isString(), body("cognome").isString(), body("anniServizio").isNumeric(),
+                    body("ruolo").custom(value => {
+                        return value === "Direttore" || value === "Staff tecnico" || value === "Regista";
+                    }), adminController.postInserimentoStaff);
 
-adminRoutes.post("/eliminaStaff", adminController.postEliminaStaff);
+adminRoutes.post("/eliminaStaff", body("codiceStaff").isMongoId(), adminController.postEliminaStaff);
 
-adminRoutes.post("/infoBD", adminController.postInfoBd);
+adminRoutes.post("/infoBD", body("codiceBD").isMongoId(), adminController.postInfoBd);
 
-adminRoutes.post("/modificaBD", upload.single("img"), adminController.postEditBd);
+adminRoutes.post("/modificaBD", body("codiceBD").isMongoId(), body("prezzo").isNumeric(), body("descrizione").isString(), upload.single("img"), adminController.postEditBd);
 
-adminRoutes.post("/inserimentoBD", upload.single("img"), adminController.postInsertBd);
+adminRoutes.post("/inserimentoBD", body("prezzo").isNumeric(), body("descrizione").isString(), upload.single("img"), adminController.postInsertBd);
 
-adminRoutes.post("/cancellaBD", adminController.postDeleteBd);
+adminRoutes.post("/cancellaBD", body("codiceBD").isMongoId(), adminController.postDeleteBd);
 
-adminRoutes.post("/infoUtente", adminController.postInfoUtente);
+adminRoutes.post("/infoUtente", body("codiceUtente").isMongoId(), adminController.postInfoUtente);
 
-adminRoutes.post("/modificaUtente", adminController.postEditUtente);
+adminRoutes.post("/modificaUtente", body("codiceUtente").isMongoId(), body("email").isEmail(), body("nome").isString(), body("cognome").isString(), 
+                    body("dataNascita").isDate(), body("via").isString(), body("city").isString(), body("cap").isNumeric(), 
+                    body("tipo").custom(value => {
+                        return value === "user" || value === "admin"
+                    }), adminController.postEditUtente);
 
-adminRoutes.post("/cancellaUtente", adminController.postDeleteUtente);
+adminRoutes.post("/cancellaUtente", body("codiceUtente").isMongoId(), adminController.postDeleteUtente);
 
 export default adminRoutes; 
