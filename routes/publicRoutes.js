@@ -10,11 +10,11 @@ publicRoutes.get("/staff", publicController.getStaff);
 
 publicRoutes.get("/shop", publicController.getShop);
 
-publicRoutes.get("/animation/:id",  param("id").notEmpty(), publicController.getAnimationPage);
+publicRoutes.get("/animation/:id",  param("id").isMongoId(), publicController.getAnimationPage);
 
 publicRoutes.get("/", publicController.getHome);
 
-publicRoutes.post("/signup", body("email").isEmail(), body("user").notEmpty(), body("password").isStrongPassword(), body("nome").notEmpty(), 
+publicRoutes.post("/signup", body("email").isEmail().normalizeEmail(), body("user").notEmpty(), body("password").isStrongPassword(), body("nome").notEmpty(), 
                     body("cognome").notEmpty(), body("dataNascita").isDate(), body("city").notEmpty(), body("via").notEmpty(), 
                     body("cap").isNumeric({ no_symbols: true }), publicController.postSignUp);
 

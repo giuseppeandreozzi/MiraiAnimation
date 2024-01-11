@@ -28,7 +28,7 @@ adminRoutes.post("/modificaAnimazione", body("_id").isMongoId(), body("titolo").
 adminRoutes.post("/aggiungiAnimazione", body("titolo").isString(), body("genere").isString(), 
                     body("tipo").custom(value => {
                         return value === "serie" || value === "film";
-                    }), body("tipo").isDate(),upload.single("immagine"), adminController.postAggiungiAnimazione);
+                    }), body("tipo").isDate(), upload.single("immagine"), adminController.postAggiungiAnimazione);
 
 adminRoutes.post("/cancellaAnimazione", body("_id").isMongoId(), adminController.postCancellaAnimazione);
 
@@ -60,8 +60,8 @@ adminRoutes.post("/cancellaBD", body("codiceBD").isMongoId(), adminController.po
 
 adminRoutes.post("/infoUtente", body("codiceUtente").isMongoId(), adminController.postInfoUtente);
 
-adminRoutes.post("/modificaUtente", body("codiceUtente").isMongoId(), body("email").isEmail(), body("nome").isString(), body("cognome").isString(), 
-                    body("dataNascita").isDate(), body("via").isString(), body("city").isString(), body("cap").isNumeric(), 
+adminRoutes.post("/modificaUtente", body("codiceUtente").isMongoId(), body("email").isEmail().normalizeEmail(), body("nome").isString(), body("cognome").isString(), 
+                    body("dataNascita").isDate(), body("via").isString(), body("city").isString(), body("cap").isNumeric({ no_symbols: true }), 
                     body("tipo").custom(value => {
                         return value === "user" || value === "admin"
                     }), adminController.postEditUtente);
