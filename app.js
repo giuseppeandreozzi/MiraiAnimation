@@ -43,6 +43,15 @@ app.use(publicRoutes);
 app.use(userRoutes);
 app.use(adminRoutes);
 
+app.use((req, res, next) => {
+  res.status(404).render("404");
+});
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(500).render("error");
+});
+
 mongoose.connect(process.env.DB_LINK).then(() => {
     app.listen(3030);
     console.log("Avviato")

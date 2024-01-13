@@ -12,9 +12,7 @@ const getAnimation = (req, res, next) => {
         res.render("animation.ejs", {
             animations: animations
         });
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const getStaff = (req, res, next) => {
@@ -22,9 +20,7 @@ const getStaff = (req, res, next) => {
         res.render("staff.ejs", {
             staffs: staffs
         });
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const getAnimationPage = (req, res, next) => {
@@ -37,9 +33,7 @@ const getAnimationPage = (req, res, next) => {
         res.render("animationPage.ejs", {
             animation: anim
         });
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const getShop = (req, res, next) => {
@@ -47,9 +41,7 @@ const getShop = (req, res, next) => {
         res.render("shop.ejs", {
             bds: bds
         });
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 
 };
 
@@ -96,13 +88,14 @@ const postSignUp = (req, res, next) => {
                     bcrypt.hash(req.body.password, 10, (err, hash) => {
                         if(err){
                             console.log(error);
-                            return;
+                            next(err);
                         }
                 
                         crypto.randomBytes(32, (err, buffer) => {
-                            if(err)
+                            if(err){
                                 console.log(err);
-
+                                next(err);
+                            }
                             const token = buffer.toString("hex");
 
                             const user = new User({
@@ -135,9 +128,7 @@ const postSignUp = (req, res, next) => {
                                 });
     
                                 res.redirect("/");
-                            }).catch(err => {
-                                console.log(err);
-                            });
+                            }).catch(next);
                         });
 
                     });
@@ -155,8 +146,9 @@ const getVerify = (req, res, next) => {
     const token = req.params.token.trim();
 
     User.findOne({"datiVerifica.codice": token}).then(user => {
-        if(user.datiVerifica.scandenza < new Date())
-            return;
+        if(user.datiVerifica.scandenza < new Date()){
+            throw new Error("Data di scadenza non valida")
+        }
         
         user.verificato = true;
         user.datiVerifica = null;
@@ -165,13 +157,9 @@ const getVerify = (req, res, next) => {
                 req.session.user = user;
             
             res.redirect("/");
-        }).catch(err => {
-            console.log(err);
-        });
+        }).catch(next);
 
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postLogIn = (req, res, next) => {
@@ -203,9 +191,7 @@ const postLogIn = (req, res, next) => {
 
             res.redirect("/");
         });
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 

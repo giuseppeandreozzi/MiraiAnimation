@@ -13,7 +13,7 @@ const getPannelloAnimazioni = (req, res, next) => {
                 animations: animations,
                 staffs: staffs
             });
-        });
+        }).catch(next);
     });
 
 };
@@ -25,7 +25,7 @@ const getPannelloStaff = (req, res, next) => {
             errorEdit: "",
             errorInsert: ""
         });
-    });
+    }).catch(next);
 };
 
 const getPannelloBD = (req, res, next) => {
@@ -37,7 +37,7 @@ const getPannelloBD = (req, res, next) => {
                 errorEdit: "",
                 errorInsert: ""
             });
-        });
+        }).catch(next);
     });
 
 };
@@ -48,9 +48,7 @@ const getPannelloUtenti = (req, res, next) => {
             users: users,
             errorEdit: ""
         });
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 
 };
 
@@ -62,9 +60,7 @@ const postInfoAnimazione = (req, res, next) => {
 
     Animation.findById(req.body.codiceAnimazione).then(anim => {
         res.json(anim);
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postModificaAnimazione = (req, res, next) => {
@@ -81,10 +77,8 @@ const postModificaAnimazione = (req, res, next) => {
 
         anim.save().then(anim => {
             res.redirect("/pannelloAnimazioni");
-        }).catch(err => {
-            console.log(err);
-        });
-    });
+        }).catch(next);
+    }).catch(next);
 };
 
 const postAggiungiAnimazione = (req, res, next) => {
@@ -103,9 +97,7 @@ const postAggiungiAnimazione = (req, res, next) => {
 
     anim.save().then(() => {
         res.redirect("/pannelloAnimazioni");
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postCancellaAnimazione = (req, res, next) => {
@@ -116,9 +108,7 @@ const postCancellaAnimazione = (req, res, next) => {
 
     Animation.findByIdAndDelete(req.body._id).then(() =>{
         res.redirect("/pannelloAnimazioni");
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postAggiungiStaffAnimazione = (req, res, next) => {
@@ -132,10 +122,8 @@ const postAggiungiStaffAnimazione = (req, res, next) => {
 
         anim.save().then(() => {
             res.redirect("/pannelloAnimazioni");
-        }).catch(err => {
-            console.log(err);
-        });
-    });
+        }).catch(next);
+    }).catch(next);
 };
 
 const postEliminaStaffAnimazione = (req, res, next) => {
@@ -150,10 +138,8 @@ const postEliminaStaffAnimazione = (req, res, next) => {
         
         anim.save().then(() => {
             res.redirect("/pannelloAnimazioni");
-        }).catch(err => {
-            console.log(err);
-        });
-    });
+        }).catch(next);
+    }).catch(next);
 };
 
 const postInfoStaff = (req, res, next) => {
@@ -164,7 +150,7 @@ const postInfoStaff = (req, res, next) => {
 
     Staff.findById(req.body.codiceStaff).then(staff => {
         res.json(staff);
-    })
+    }).catch(next);
 };
 
 const postModificaStaff = (req, res, next) => {
@@ -176,7 +162,7 @@ const postModificaStaff = (req, res, next) => {
                 errorEdit: "Errore nel campo " + error.errors[0].path,
                 errorInsert: ""
             });
-        });
+        }).catch(next);
     }
 
     Staff.findById(req.body.codiceStaff).then(staff => {
@@ -187,10 +173,8 @@ const postModificaStaff = (req, res, next) => {
         
         staff.save().then(() => {
             res.redirect("/pannelloStaff");
-        });
-    }).catch(err => {
-        console.log(err);
-    });
+        }).catch(next);
+    }).catch(next);
 };
 
 const postInserimentoStaff = (req, res, next) => {
@@ -202,7 +186,7 @@ const postInserimentoStaff = (req, res, next) => {
                 errorEdit: "",
                 errorInsert: "Errore nel campo " + error.errors[0].path
             });
-        });
+        }).catch(next);
     }
 
     let staff = new Staff({
@@ -213,10 +197,8 @@ const postInserimentoStaff = (req, res, next) => {
     });
 
     staff.save().then(() => {
-        
-    }).catch(err => {
-        console.log(err);
-    });
+        res.redirect("/pannelloStaff")
+    }).catch(next);
 };
 
 const postEliminaStaff = (req, res, next) => {
@@ -227,9 +209,7 @@ const postEliminaStaff = (req, res, next) => {
 
     Staff.findByIdAndDelete(req.body.codiceStaff).then(() =>{
         res.redirect("/pannelloStaff");
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postInfoBd = (req, res, next) => {
@@ -240,9 +220,7 @@ const postInfoBd = (req, res, next) => {
 
     Bd.findById(req.body.codiceBD).then(bd => {
         res.json(bd);
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postEditBd = (req, res, next) => {
@@ -256,8 +234,8 @@ const postEditBd = (req, res, next) => {
                     errorEdit: "Errore nel campo " + error.errors[0].path,
                     errorInsert: ""
                 });
-            });
-        });
+            }).catch(next);
+        }).catch(next);
     }
 
     Bd.findById(req.body.codiceBD).then(bd => {
@@ -268,9 +246,7 @@ const postEditBd = (req, res, next) => {
         bd.save().then(() => {
             res.redirect("/pannelloBD");
         });
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postInsertBd = (req, res, next) => {
@@ -284,8 +260,8 @@ const postInsertBd = (req, res, next) => {
                     errorEdit: "",
                     errorInsert: "Errore nel campo " + error.errors[0].path
                 });
-            });
-        });
+            }).catch(next);
+        }).catch(next);
     }
 
     const bd = new Bd({
@@ -297,9 +273,7 @@ const postInsertBd = (req, res, next) => {
 
     bd.save().then(() => {
         res.redirect("/pannelloBD");
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postDeleteBd = (req, res, next) => {
@@ -310,9 +284,7 @@ const postDeleteBd = (req, res, next) => {
 
     Bd.findByIdAndDelete(req.body.codiceBD).then(() => {
         res.redirect("/pannelloBD");
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postInfoUtente = (req, res, next) => {
@@ -323,9 +295,7 @@ const postInfoUtente = (req, res, next) => {
 
     User.findById(req.body.codiceUtente).then(user => {
         res.json(user);
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 }
 
 const postEditUtente = (req, res, next) => {
@@ -336,9 +306,7 @@ const postEditUtente = (req, res, next) => {
                 users: users,
                 errorEdit: "Errore nel campo " + error.errors[0].path
             });
-        }).catch(err => {
-            console.log(err);
-        });
+        }).catch(next);
     }
 
     User.findById(req.body.codiceUtente).then(user => {
@@ -356,17 +324,18 @@ const postEditUtente = (req, res, next) => {
 
             user.save().then(() => {
                 res.redirect("/pannelloUtenti")
-            });
-        })
+            }).catch(next);
+        }).catch(next);
 
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 async function getHashPassword(password) {
     if(password !== ""){
         return bcrypt.hash(password, 10, (err, hash) => {
+            if(err)
+                throw new Error("Errore creazione hash password")
+
             return hash;
         });
     } else 
@@ -381,9 +350,7 @@ const postDeleteUtente = (req, res, next) => {
 
     User.findByIdAndDelete(req.body.codiceUtente).then(() => {
         res.redirect("/pannelloUtenti")
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 export {getPannelloAnimazioni, getPannelloStaff, getPannelloBD, getPannelloUtenti, postInfoAnimazione, postModificaAnimazione, postAggiungiAnimazione,

@@ -13,7 +13,7 @@ import {validationResult} from "express-validator";
 const getLogOut = (req, res, next) => {
     req.session.destroy(err => {
         if(err)
-            console.log(err);
+            next(err);
 
         res.redirect("/");
     });
@@ -32,7 +32,7 @@ const getReset = (req, res, next) => {
 
     crypto.randomBytes(32, (err, buffer) => {
         if(err)
-            console.log(err);
+            next(err);
 
         const token = buffer.toString("hex");
 
@@ -54,13 +54,9 @@ const getReset = (req, res, next) => {
                 });
     
                 res.redirect("/");
-            }).catch(err => {
-                console.log(err);
-            });
+            }).catch(next);
 
-        }).catch(err => {
-            console.log(err);
-        });
+        }).catch(next);
     });
 };
 
@@ -79,9 +75,7 @@ const getResetPassword = (req, res, next) => {
             });
         } else  
             res.redirect("/");
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postResetPassword = (req, res, next) => {
@@ -105,6 +99,9 @@ const postResetPassword = (req, res, next) => {
             }
 
             bcrypt.hash(req.body.newPassword, 10, (err, hash) => {
+                if(err)
+                    next(err);
+
                 user.password = hash;
 
                 user.save().then(() => {
@@ -114,12 +111,10 @@ const postResetPassword = (req, res, next) => {
                         errorString: null,
                         success: "Password cambiata con successo"
                     });
-                });
+                }).catch(next);;
             });
         });
-    }).catch(err => {
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const getAccount = (req, res, next) => {
@@ -153,12 +148,8 @@ const postAccount = (req, res, next) => {
                 success: "Dati modificati con successo",
                 error: ""
             });
-        }).catch(err => {
-            console.log(err);
-        });
-    }).catch(err => {
-        console.log(err);
-    });
+        }).catch(next);
+    }).catch(next);
 };
 const getCarrello = (req, res, next) => {
     let user = new User(req.session.user);
@@ -170,9 +161,7 @@ const getCarrello = (req, res, next) => {
         res.render("user/cart", {
             cart: result.carrello
         });
-    }).catch(err =>{
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postCarrello = (req, res, next) => {
@@ -192,12 +181,8 @@ const postCarrello = (req, res, next) => {
             req.session.user = user;
 
             res.redirect("/shop");
-        }).catch(err => {
-            console.log(err);
-        });
-    }).catch(err => {
-        console.log(err);
-    });
+        }).catch(next);
+    }).catch(next);
 
 };
 
@@ -229,9 +214,7 @@ const getCheckout = (req, res, next) => {
             cancel_url: req.protocol + '://'  + req.hostname + ':' + process.env.PORT + '/',
           }).then(session => {
             res.status(303).redirect(session.url);
-          }).catch(err => {
-            console.log(err);
-          });
+          }).catch(next);
     });
 
 
@@ -260,12 +243,8 @@ const getCheckoutSuccess = (req, res, next) => {
         user.save().then(user => {
             req.session.user = user;
             res.render("user/success");
-        }).catch(err => {
-            console.log(err);
-        });
-    }).catch(err => {
-        console.log(err);
-    });
+        }).catch(next);
+    }).catch(next);
 
 };
 
@@ -278,9 +257,7 @@ const postDeleteCart = (req, res, next) => {
     
             res.redirect("/carrello");
         });
-    }).catch(err =>{
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const getOrdini = (req, res, next) => {
@@ -293,9 +270,7 @@ const getOrdini = (req, res, next) => {
         res.render("user/orders", {
             ordini: user.ordini
         });
-    }).catch(err =>{
-        console.log(err);
-    });
+    }).catch(next);
 
 };
 
@@ -374,9 +349,7 @@ const getFattura = (req, res, next) => {
             .text("Prezzo totale: " + prezzoTotale, {align: 'right'});
         
         doc.end();
-    }).catch(err =>{
-        console.log(err);
-    });
+    }).catch(next);
 };
 
 const postInsertRecensione = (req, res, next) => {
@@ -395,9 +368,7 @@ const postInsertRecensione = (req, res, next) => {
         anim.save().then(() =>{
             res.redirect("/animation/" + req.body.codiceAnimazione);
         });
-    }).catch(err =>{
-        console.log(err);
-    });
+    }).catch(next);
 };
 export {getLogOut, getReset, getResetPassword, postResetPassword, getAccount, postAccount, getCarrello, postCarrello, getCheckout, getCheckoutSuccess, 
     postDeleteCart, getOrdini, getFattura, postInsertRecensione};

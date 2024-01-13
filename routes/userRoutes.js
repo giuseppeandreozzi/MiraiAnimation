@@ -31,7 +31,7 @@ userRoutes.post("/deleteCart", body("_id").isMongoId(), userController.postDelet
 
 userRoutes.get("/ordini", userController.getOrdini);
 
-userRoutes.get("/fattura/:numOrdine", param("codice").notEmpty(), userController.getFattura);
+userRoutes.get("/fattura/:numOrdine", param("numOrdine").notEmpty(), userController.getFattura);
 
 userRoutes.post("/aggiungiRecensione", body("codiceAnimazione").isMongoId(), body("voto").custom(value => {
                     return value > 0 && value < 6
