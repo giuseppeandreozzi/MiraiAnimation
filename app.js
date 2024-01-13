@@ -8,6 +8,20 @@ import { csrfSync } from "csrf-sync";
 import userRoutes from "./routes/userRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js";
 
+const isLoggedIn = (req, res, next) => {
+  if (!req.session.user)
+    throw new Error("Non autorizzato");
+
+    next();
+};
+
+const isAdmin = (req, res, next) => {
+  if (req.session.user.tipo !== "admin")
+    throw new Error("Non autorizzato");
+
+    next();
+};
+
 const app = express();
 const csrf = csrfSync({
     getTokenFromRequest: (req) => {
@@ -40,8 +54,8 @@ app.use((req, res, next) => {
   });
 
 app.use(publicRoutes);
-app.use(userRoutes);
-app.use(adminRoutes);
+app.use(isLoggedIn, userRoutes);
+app.use(isLoggedIn, isAdmin, adminRoutes);
 
 app.use((req, res, next) => {
   res.status(404).render("404");
